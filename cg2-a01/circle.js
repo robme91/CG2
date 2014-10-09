@@ -38,14 +38,45 @@ define(["util", "vec2", "scene", "point_dragger"],
     };
 
     // test whether the mouse position is on this line segment
-    Circle.prototype.isHit = function(context,pos) {
-        
+    Circle.prototype.isHit = function(context,mousePos) {
+    
+        // check whether distance between mouse and dragger's center
+        // is equal ( radius + (line width)/2 )
+        var dx = mousePos[0] - this.midPoint[0];
+        var dy = mousePos[1] - this.midPoint[1];
+		var distanceSq = dx * dx + dy * dy;
+		
+		var innerBound = this.radius - this.lineStyle.width / 2 - 2;
+		var outerBound = this.radius + this.lineStyle.width / 2 + 2;
+		
+		if( distanceSq > innerBound * innerBound && distanceSq < outerBound * outerBound)
+			return true;	
+			
+		return false;
     };
 	
 	
 	// return list of draggers to manipulate this line
     Circle.prototype.createDraggers = function() {
-	console.log("hats");
+		
+		var draggerStyle = { radius:4, color: this.lineStyle.color, width:0, fill:true }
+        var draggers = [];
+        
+        // create closure and callbacks for midpoint dragger
+        var _circle = this;
+        var getMidPoint = function() { return _circle.midPoint; };
+        var setMidPoint = function(dragEvent) { _circle.midPoint = dragEvent.position; };
+        draggers.push( new PointDragger(getMidPoint, setMidPoint, draggerStyle) );
+		
+		// create dragger for changing the size of the circle
+        var getRadius = function() { return [_circle.midPoint[0], _circle.midPoint[1] - _circle.radius]; };
+        var setRadius = function(dragEvent) {
+							var difference = vec2.sub(dragEvent.position, _circle.midPoint);
+							_circle.radius = vec2.length(difference); 
+						};
+        draggers.push( new PointDragger(getRadius, setRadius, draggerStyle) );
+        
+        return draggers;
     };
 	
 	

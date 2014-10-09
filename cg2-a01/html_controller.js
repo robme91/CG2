@@ -84,7 +84,7 @@ define(["jquery", "straight_line", "circle"],
                 color: randomColor()
             };
 			
-			var radius = Math.floor(Math.random() * 30) + 1;
+			var radius = Math.floor(Math.random() * 50) + 10;
 			
 			var circle = new Circle([randomX(),randomY()],
 			                        radius, 
@@ -92,9 +92,8 @@ define(["jquery", "straight_line", "circle"],
 			scene.addObjects([circle]);
 		
             // deselect all objects, then select the newly created object
-            //sceneController.deselect();
-            //sceneController.select(circle); // this will also redraw
-			sceneController.redraw();
+            sceneController.deselect();
+            sceneController.select(circle); // this will also redraw
 
 		}));
         
