@@ -64,15 +64,21 @@ define(["util", "vec2", "scene", "point_dragger"],
         
         // create closure and callbacks for midpoint dragger
         var _circle = this;
+		var sizeDraggerPosition = [_circle.midPoint[0], _circle.midPoint[1] - _circle.radius];
         var getMidPoint = function() { return _circle.midPoint; };
-        var setMidPoint = function(dragEvent) { _circle.midPoint = dragEvent.position; };
+        var setMidPoint = function(dragEvent) { 
+		                      var difference = vec2.sub(dragEvent.position, _circle.midPoint);
+		                      sizeDraggerPosition = vec2.add(sizeDraggerPosition, difference);
+						      _circle.midPoint = dragEvent.position; 
+						  };
         draggers.push( new PointDragger(getMidPoint, setMidPoint, draggerStyle) );
 		
 		// create dragger for changing the size of the circle
-        var getRadius = function() { return [_circle.midPoint[0], _circle.midPoint[1] - _circle.radius]; };
+        var getRadius = function() { return sizeDraggerPosition; };
         var setRadius = function(dragEvent) {
 							var difference = vec2.sub(dragEvent.position, _circle.midPoint);
-							_circle.radius = vec2.length(difference); 
+							_circle.radius = vec2.length(difference);
+							sizeDraggerPosition = dragEvent.position;
 						};
         draggers.push( new PointDragger(getRadius, setRadius, draggerStyle) );
         
