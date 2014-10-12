@@ -50,6 +50,8 @@ define(["jquery", "straight_line", "circle"],
             // convert to hex notation
             return "#"+toHex2(r)+toHex2(g)+toHex2(b);
         };
+		
+
         
         /*
          * event handler for "new line button".
@@ -97,7 +99,15 @@ define(["jquery", "straight_line", "circle"],
 
 		}));
         
-
+		var actualValues = function(){
+			var width = sceneController.getSelectedObject().lineStyle.width;
+			var color = sceneController.getSelectedObject().lineStyle.color;
+			$("#lineWidthSelector").val(width);
+			$("#colorSelector").val(color);
+			
+		}
+		//var test = sceneController.getSelectedObject
+		sceneController.onSelection(actualValues);
         
     
     };
