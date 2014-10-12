@@ -106,7 +106,6 @@ define(["jquery", "straight_line", "circle"],
 			$("#colorSelector").val(color);
 			
 		}
-		//var test = sceneController.getSelectedObject
 		sceneController.onSelection(actualValues);
         
     
