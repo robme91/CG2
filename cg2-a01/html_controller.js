@@ -123,7 +123,7 @@ define(["jquery", "straight_line", "circle"],
 		sceneController.onSelection(actualValues);
         
 		var updateWidth = function(){
-			var newWidth = $("#lineWidthSelector").val();
+			var newWidth = parseInt($("#lineWidthSelector").val());
 			sceneController.getSelectedObject().lineStyle.width = newWidth;
 			sceneController.redraw();
 		}
@@ -143,7 +143,7 @@ define(["jquery", "straight_line", "circle"],
 		$("#colorSelector").change(updateColor);
 		
 		var updateRadius = function(){
-			var newRadius = $("#radiusSelector").val();
+			var newRadius = parseInt($("#radiusSelector").val());
 			sceneController.getSelectedObject().radius = newRadius;
 
 			// this ensures that the color of the draggers are also updated, it also redraws the scene
