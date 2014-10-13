@@ -116,7 +116,10 @@ define(["jquery", "straight_line", "circle"],
 			}
 			
 		}
+		
+		
 		sceneController.onSelection(actualValues);
+		sceneController.onObjChange(Math.floor(actualValues)); 
         
 		var updateWidth = function(){
 			var newWidth = $("#lineWidthSelector").val();
