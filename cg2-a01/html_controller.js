@@ -109,7 +109,7 @@ define(["jquery", "straight_line", "circle"],
 			if (selectedObj instanceof Circle){
 				$("#radiusLabel").show();
 				$("#radiusSelector").show();
-				$("#radiusSelector").val(selectedObj.radius);
+				$("#radiusSelector").val(Math.round(selectedObj.radius));
 			}else{
 				$("#radiusLabel").hide();
 				$("#radiusSelector").hide();
@@ -131,7 +131,9 @@ define(["jquery", "straight_line", "circle"],
 			sceneController.getSelectedObject().lineStyle.color = newColor;
             
 			// this ensures that the color of the draggers are also updated, it also redraws the scene
-			sceneController.select(sceneController.getSelectedObject());
+			var selectedObject = sceneController.getSelectedObject();
+			sceneController.deselect();
+			sceneController.select(selectedObject);
 		}
 		
 		$("#colorSelector").change(updateColor);
@@ -139,7 +141,11 @@ define(["jquery", "straight_line", "circle"],
 		var updateRadius = function(){
 			var newRadius = $("#radiusSelector").val();
 			sceneController.getSelectedObject().radius = newRadius;
-			sceneController.redraw();
+
+			// this ensures that the color of the draggers are also updated, it also redraws the scene
+			var selectedObject = sceneController.getSelectedObject();
+			sceneController.deselect();
+			sceneController.select(selectedObject);
 		}
 		
 		$("#radiusSelector").change(updateRadius);
