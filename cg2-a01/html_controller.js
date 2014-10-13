@@ -100,10 +100,20 @@ define(["jquery", "straight_line", "circle"],
 		}));
         
 		var actualValues = function(){
-			var width = sceneController.getSelectedObject().lineStyle.width;
-			var color = sceneController.getSelectedObject().lineStyle.color;
+			var selectedObj = sceneController.getSelectedObject();
+			var width = selectedObj.lineStyle.width;
+			var color = selectedObj.lineStyle.color;
 			$("#lineWidthSelector").val(width);
 			$("#colorSelector").val(color);
+			
+			if (selectedObj.radius != undefined){
+				$("#radiusLabel").show();
+				$("#radiusSelector").show();
+				$("#radiusSelector").val(selectedObj.radius);
+			}else{
+				$("#radiusLabel").hide();
+				$("#radiusSelector").hide();
+			}
 			
 		}
 		sceneController.onSelection(actualValues);
@@ -113,17 +123,24 @@ define(["jquery", "straight_line", "circle"],
 			sceneController.getSelectedObject().lineStyle.width = newWidth;
 			sceneController.redraw();
 		}
+		
 		$("#lineWidthSelector").change(updateWidth);
 		
 		var updateColor = function(){
 			var newColor = $("#colorSelector").val();
 			sceneController.getSelectedObject().lineStyle.color = newColor;
-			var temp = sceneController.getSelectedObject();
-			console.log(temp);
 			sceneController.redraw();
 		}
 		
 		$("#colorSelector").change(updateColor);
+		
+		var updateRadius = function(){
+			var newRadius = $("#radiusSelector").val();
+			sceneController.getSelectedObject().radius = newRadius;
+			sceneController.redraw();
+		}
+		
+		$("#radiusSelector").change(updateRadius);
     
     };
 
