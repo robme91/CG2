@@ -108,6 +108,22 @@ define(["jquery", "straight_line", "circle"],
 		}
 		sceneController.onSelection(actualValues);
         
+		var updateWidth = function(){
+			var newWidth = $("#lineWidthSelector").val();
+			sceneController.getSelectedObject().lineStyle.width = newWidth;
+			sceneController.redraw();
+		}
+		$("#lineWidthSelector").change(updateWidth);
+		
+		var updateColor = function(){
+			var newColor = $("#colorSelector").val();
+			sceneController.getSelectedObject().lineStyle.color = newColor;
+			var temp = sceneController.getSelectedObject();
+			console.log(temp);
+			sceneController.redraw();
+		}
+		
+		$("#colorSelector").change(updateColor);
     
     };
 
