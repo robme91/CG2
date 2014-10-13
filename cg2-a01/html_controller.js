@@ -129,7 +129,9 @@ define(["jquery", "straight_line", "circle"],
 		var updateColor = function(){
 			var newColor = $("#colorSelector").val();
 			sceneController.getSelectedObject().lineStyle.color = newColor;
-			sceneController.redraw();
+            
+			// this ensures that the color of the draggers are also updated, it also redraws the scene
+			sceneController.select(sceneController.getSelectedObject());
 		}
 		
 		$("#colorSelector").change(updateColor);
