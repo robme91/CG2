@@ -106,7 +106,7 @@ define(["jquery", "straight_line", "circle"],
 			$("#lineWidthSelector").val(width);
 			$("#colorSelector").val(color);
 			
-			if (selectedObj.radius != undefined){
+			if (selectedObj instanceof Circle){
 				$("#radiusLabel").show();
 				$("#radiusSelector").show();
 				$("#radiusSelector").val(selectedObj.radius);

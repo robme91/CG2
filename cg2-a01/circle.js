@@ -79,6 +79,8 @@ define(["util", "vec2", "scene", "point_dragger"],
 							var difference = vec2.sub(dragEvent.position, _circle.midPoint);
 							_circle.radius = vec2.length(difference);
 							sizeDraggerPosition = dragEvent.position;
+							// update the HTML element
+							$("#radiusSelector").val(Math.round(_circle.radius));
 						};
         draggers.push( new PointDragger(getRadius, setRadius, draggerStyle) );
         
