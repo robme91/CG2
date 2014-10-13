@@ -105,6 +105,10 @@ define(["jquery", "straight_line", "circle"],
 			var color = selectedObj.lineStyle.color;
 			$("#lineWidthSelector").val(width);
 			$("#colorSelector").val(color);
+			$("#lineWidthLabel").show();
+			$("#lineWidthSelector").show();
+			$("#colorLabel").show();
+			$("#colorSelector").show();
 			
 			if (selectedObj instanceof Circle){
 				$("#radiusLabel").show();
