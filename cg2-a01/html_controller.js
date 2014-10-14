@@ -99,6 +99,9 @@ define(["jquery", "straight_line", "circle"],
 
 		}));
         
+		/*
+		 * the actual values of the figures
+		 */
 		var actualValues = function(){
 			var selectedObj = sceneController.getSelectedObject();
 			var width = selectedObj.lineStyle.width;
@@ -120,16 +123,28 @@ define(["jquery", "straight_line", "circle"],
 			}
 			
 		}
+		/*
+		 * shows values of selected object
+		 */
 		sceneController.onSelection(actualValues);
         
+		/*
+		 * update the linewidth of the selected object
+		 */
 		var updateWidth = function(){
 			var newWidth = parseInt($("#lineWidthSelector").val());
 			sceneController.getSelectedObject().lineStyle.width = newWidth;
 			sceneController.redraw();
 		}
-		
+		/*
+		 * if html element changes, width will be updated
+		 */
 		$("#lineWidthSelector").change(updateWidth);
 		
+		
+		/*
+		 * update the color of the selected object
+		 */
 		var updateColor = function(){
 			var newColor = $("#colorSelector").val();
 			sceneController.getSelectedObject().lineStyle.color = newColor;
@@ -140,8 +155,15 @@ define(["jquery", "straight_line", "circle"],
 			sceneController.select(selectedObject);
 		}
 		
+		/*
+		 * if html element changes, color will be updated
+		 */
 		$("#colorSelector").change(updateColor);
 		
+		
+		/*
+		 * update the radius of the selected object
+		 */
 		var updateRadius = function(){
 			var newRadius = parseInt($("#radiusSelector").val());
 			sceneController.getSelectedObject().radius = newRadius;
@@ -152,6 +174,9 @@ define(["jquery", "straight_line", "circle"],
 			sceneController.select(selectedObject);
 		}
 		
+		/*
+		 * if html element changes, radius will be updated
+		 */
 		$("#radiusSelector").change(updateRadius);
     
     };
