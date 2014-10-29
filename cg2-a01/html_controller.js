@@ -98,6 +98,29 @@ define(["jquery", "straight_line", "circle"],
             sceneController.select(circle); // this will also redraw
 
 		}));
+		
+		/*
+         * event handler for "new parametric curve button".
+         */
+        $("#btnNewParametricCurve").click( (function() {
+		    
+			// create the actual curve and add it to the scene
+            var style = { 
+                width: Math.floor(Math.random() * 3) + 1,
+                color: randomColor()
+            };
+			
+		   /**	TODO
+		   *	sobald curve modul impl. dann hier entsprechende create funktionen aufrufen.	
+		   */
+		   
+		
+            // deselect all objects, then select the newly created object
+            sceneController.deselect();
+            sceneController.select(circle); // this will also redraw
+
+		}));
+		
         
 		/*
 		 * the actual values of the figures
@@ -121,7 +144,7 @@ define(["jquery", "straight_line", "circle"],
 				$("#radiusLabel").hide();
 				$("#radiusSelector").hide();
 			}
-			
+			/**if instance of Curve....*/
 		}
 		/*
 		 * shows values of selected object
