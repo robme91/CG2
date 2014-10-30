@@ -19,15 +19,14 @@ define(["util", "vec2", "scene", "point_dragger"],
 
         // draw style for drawing the line
         this.lineStyle = lineStyle || { width: "2", color: "#0000AA" };
+
+        this.pointArray = [];
     }
 
     ParametricCurve.prototype.draw = function(context) {
-        // draw the curve
-        context.beginPath();
+        var functionString = "function(t) { var result = 0; try { result = {{TERM}} ;} catch (e) { alert (\"Error: \" + e.message + '\\n\\nPlease check the formular.\\nUse \\'t\\' for the step variable.' ); return undefined;} return result; } ;"
 
         // create wrapper functions for our terms
-        var functionString = "function(t) { var result = 0; try { result = {{TERM}} ;} catch (e) { alert (\"Error: \" + e.message + '\\n\\nUse \\'t\\' for the step variable.' ); return undefined;} return result; } ;"
-
         var xTermWrapper;
         eval("xTermWrapper = " + functionString.replace(/{{TERM}}/g, this.xTerm) );
         var yTermWrapper;
@@ -40,8 +39,13 @@ define(["util", "vec2", "scene", "point_dragger"],
 
         // if the output of the wrapper functions are undefined
         // the formula is broken, so there is nothing to draw
-        if(x === undefined || y === undefined)
+        if (x === undefined || y === undefined)
             return;
+
+        this.pointArray[0] = [x, y];
+
+        // draw the curve
+        context.beginPath();
 
         context.moveTo(x, y);
 
@@ -50,17 +54,46 @@ define(["util", "vec2", "scene", "point_dragger"],
             x = xTermWrapper(t);
             y = yTermWrapper(t);
 
+            this.pointArray[i] = [x, y];
+
             context.lineTo(x, y);
-            context.moveTo(x, y);
         }
 
-
-        // set drawing style
+        // set curve drawing style
         context.lineWidth = this.lineStyle.width;
         context.strokeStyle = this.lineStyle.color;
 
-        // actually draw
+        // actually draw the curve
         context.stroke();
+
+        // draw the tickmarks if requested
+        if (this.showTickmarks === true) {
+            context.beginPath();
+
+            for (var i = 1; i < this.segments; i++) {
+                // calculate the normal of the current curve point
+                var previousPoint = this.pointArray[i - 1];
+                var nextPoint = this.pointArray[i + 1];
+                var tangent = vec2.sub(previousPoint, nextPoint);
+                var tangentNormal = [tangent[1] * (-1), tangent[0]];
+                tangentNormal = vec2.mult(vec2.normalize(tangentNormal), 10); // make the tangent normal 10px long
+
+                // calculate two points that are perpendicular above and below the current curve point
+                var topTick = vec2.add(this.pointArray[i], tangentNormal);
+                var bottomTick = vec2.sub(this.pointArray[i], tangentNormal);
+
+                // draw a line between those points
+                context.moveTo(topTick[0], topTick[1]);
+                context.lineTo(bottomTick[0], bottomTick[1]);
+            }
+
+            // set tickmarks drawing style
+            context.lineWidth = 1;
+            context.strokeStyle = "#FF711B";
+
+            // actually draw the tickmarks
+            context.stroke();
+        }
     }
 
     // test whether the mouse position is on the curve
