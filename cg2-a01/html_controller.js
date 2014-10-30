@@ -50,7 +50,7 @@ define(["jquery", "straight_line", "circle"],
             // convert to hex notation
             return "#"+toHex2(r)+toHex2(g)+toHex2(b);
         };
-		
+        
 
         
         /*
@@ -74,133 +74,133 @@ define(["jquery", "straight_line", "circle"],
             sceneController.select(line); // this will also redraw
                         
         }));
-		
-		/*
+        
+        /*
          * event handler for "new circle button".
          */
         $("#btnNewCircle").click( (function() {
-		    
-			// create the actual circle and add it to the scene
+            
+            // create the actual circle and add it to the scene
             var style = { 
                 width: Math.floor(Math.random() * 3) + 1,
                 color: randomColor()
             };
-			
-			var radius = Math.floor(Math.random() * 50) + 10;
-			
-			var circle = new Circle([randomX(),randomY()],
-			                        radius, 
-									style);
-			scene.addObjects([circle]);
-		
+            
+            var radius = Math.floor(Math.random() * 50) + 10;
+            
+            var circle = new Circle([randomX(),randomY()],
+                                    radius, 
+                                    style);
+            scene.addObjects([circle]);
+        
             // deselect all objects, then select the newly created object
             sceneController.deselect();
             sceneController.select(circle); // this will also redraw
 
-		}));
-		
-		/*
+        }));
+        
+        /*
          * event handler for "new parametric curve button".
          */
         $("#btnNewParametricCurve").click( (function() {
-		    
-			// create the actual curve and add it to the scene
+            
+            // create the actual curve and add it to the scene
             var style = { 
                 width: Math.floor(Math.random() * 3) + 1,
                 color: randomColor()
             };
-			
-		   /**	TODO
-		   *	sobald curve modul impl. dann hier entsprechende create funktionen aufrufen.	
-		   */
-		   
-		
+            
+           /**    TODO
+           *    sobald curve modul impl. dann hier entsprechende create funktionen aufrufen.    
+           */
+           
+        
             // deselect all objects, then select the newly created object
             sceneController.deselect();
             sceneController.select(circle); // this will also redraw
 
-		}));
-		
+        }));
         
-		/*
-		 * the actual values of the figures
-		 */
-		var actualValues = function(){
-			var selectedObj = sceneController.getSelectedObject();
-			var width = selectedObj.lineStyle.width;
-			var color = selectedObj.lineStyle.color;
-			$("#lineWidthSelector").val(width);
-			$("#colorSelector").val(color);
-			$("#lineWidthLabel").show();
-			$("#lineWidthSelector").show();
-			$("#colorLabel").show();
-			$("#colorSelector").show();
-			
-			if (selectedObj instanceof Circle){
-				$("#radiusLabel").show();
-				$("#radiusSelector").show();
-				$("#radiusSelector").val(Math.round(selectedObj.radius));
-			}else{
-				$("#radiusLabel").hide();
-				$("#radiusSelector").hide();
-			}
-			/**if instance of Curve....*/
-		}
-		/*
-		 * shows values of selected object
-		 */
-		sceneController.onSelection(actualValues);
         
-		/*
-		 * update the linewidth of the selected object
-		 */
-		var updateWidth = function(){
-			var newWidth = parseInt($("#lineWidthSelector").val());
-			sceneController.getSelectedObject().lineStyle.width = newWidth;
-			sceneController.redraw();
-		}
-		/*
-		 * if html element changes, width will be updated
-		 */
-		$("#lineWidthSelector").change(updateWidth);
-		
-		
-		/*
-		 * update the color of the selected object
-		 */
-		var updateColor = function(){
-			var newColor = $("#colorSelector").val();
-			sceneController.getSelectedObject().lineStyle.color = newColor;
+        /*
+         * the actual values of the figures
+         */
+        var actualValues = function(){
+            var selectedObj = sceneController.getSelectedObject();
+            var width = selectedObj.lineStyle.width;
+            var color = selectedObj.lineStyle.color;
+            $("#lineWidthSelector").val(width);
+            $("#colorSelector").val(color);
+            $("#lineWidthLabel").show();
+            $("#lineWidthSelector").show();
+            $("#colorLabel").show();
+            $("#colorSelector").show();
             
-			// this ensures that the color of the draggers are also updated, it also redraws the scene
-			var selectedObject = sceneController.getSelectedObject();
-			sceneController.deselect();
-			sceneController.select(selectedObject);
-		}
-		
-		/*
-		 * if html element changes, color will be updated
-		 */
-		$("#colorSelector").change(updateColor);
-		
-		
-		/*
-		 * update the radius of the selected object
-		 */
-		var updateRadius = function(){
-			var newRadius = parseInt($("#radiusSelector").val());
-			sceneController.getSelectedObject().radius = newRadius;
+            if (selectedObj instanceof Circle){
+                $("#radiusLabel").show();
+                $("#radiusSelector").show();
+                $("#radiusSelector").val(Math.round(selectedObj.radius));
+            }else{
+                $("#radiusLabel").hide();
+                $("#radiusSelector").hide();
+            }
+            /**if instance of Curve....*/
+        }
+        /*
+         * shows values of selected object
+         */
+        sceneController.onSelection(actualValues);
+        
+        /*
+         * update the linewidth of the selected object
+         */
+        var updateWidth = function(){
+            var newWidth = parseInt($("#lineWidthSelector").val());
+            sceneController.getSelectedObject().lineStyle.width = newWidth;
+            sceneController.redraw();
+        }
+        /*
+         * if html element changes, width will be updated
+         */
+        $("#lineWidthSelector").change(updateWidth);
+        
+        
+        /*
+         * update the color of the selected object
+         */
+        var updateColor = function(){
+            var newColor = $("#colorSelector").val();
+            sceneController.getSelectedObject().lineStyle.color = newColor;
+            
+            // this ensures that the color of the draggers are also updated, it also redraws the scene
+            var selectedObject = sceneController.getSelectedObject();
+            sceneController.deselect();
+            sceneController.select(selectedObject);
+        }
+        
+        /*
+         * if html element changes, color will be updated
+         */
+        $("#colorSelector").change(updateColor);
+        
+        
+        /*
+         * update the radius of the selected object
+         */
+        var updateRadius = function(){
+            var newRadius = parseInt($("#radiusSelector").val());
+            sceneController.getSelectedObject().radius = newRadius;
 
-			// this ensures that the color of the draggers are also updated, it also redraws the scene
-			var selectedObject = sceneController.getSelectedObject();
-			sceneController.deselect();
-			sceneController.select(selectedObject);
-		}
-		
-		/*
-		 * if html element changes, radius will be updated
-		 */
-		$("#radiusSelector").change(updateRadius);
+            // this ensures that the color of the draggers are also updated, it also redraws the scene
+            var selectedObject = sceneController.getSelectedObject();
+            sceneController.deselect();
+            sceneController.select(selectedObject);
+        }
+        
+        /*
+         * if html element changes, radius will be updated
+         */
+        $("#radiusSelector").change(updateRadius);
     
     };
 

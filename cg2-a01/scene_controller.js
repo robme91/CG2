@@ -72,14 +72,14 @@ define(["util", "scene"],
         this.canvas.addEventListener('mouseup',   (function(ev) { ev.preventDefault(); _controller.mouseup(ev);   }), false);
                                 
     };
-	/*
-	 * Redraws the Scene.
-	 *
-	*/
-	SceneController.prototype.redraw = function() {
+    /*
+     * Redraws the Scene.
+     *
+    */
+    SceneController.prototype.redraw = function() {
         // redraw
         this.scene.draw(this.context);
-	};
+    };
     
     /* 
      *  Register a callback function for whenever the selection changes,
