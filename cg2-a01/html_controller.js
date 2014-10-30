@@ -109,7 +109,8 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
                 width: Math.floor(Math.random() * 3) + 1,
                 color: randomColor()
             };
-           
+            
+            //TODO: Random values
             var paramtericCurve = new ParametricCurve( $('#xTermInput').val(),
                                                        $('#yTermInput').val(),
                                                        parseFloat($('#minTSelector').val()),
@@ -126,7 +127,7 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
         
         
         /*
-         * the actual values of the figures
+         * callback that displays the actuall values of the selected object
          */
         var objectSelectionCallback = function(){
             // hide everything
@@ -182,11 +183,6 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
             sceneController.getSelectedObject().lineStyle.width = newWidth;
             sceneController.redraw();
         }
-        /*
-         * if html element changes, width will be updated
-         */
-        $("#lineWidthSelector").change(updateWidth);
-        
         
         /*
          * update the color of the selected object
@@ -199,13 +195,7 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
             var selectedObject = sceneController.getSelectedObject();
             sceneController.deselect();
             sceneController.select(selectedObject);
-        }
-        
-        /*
-         * if html element changes, color will be updated
-         */
-        $("#colorSelector").change(updateColor);
-        
+        } 
         
         /*
          * update the radius of the selected object
@@ -220,11 +210,62 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
             sceneController.select(selectedObject);
         }
         
+        var updateXTerm = function(){
+            var newXTerm = $("#xTermInput").val();
+            sceneController.getSelectedObject().xTerm = newXTerm;
+            
+            sceneController.redraw();
+        }
+        
+        var updateYTerm = function(){
+            var newYTerm = $("#yTermInput").val();
+            sceneController.getSelectedObject().yTerm = newYTerm;
+            
+            sceneController.redraw();
+        }
+        
+        var updateMinT = function(){
+            var newMinT = parseFloat($("#minTSelector").val());
+            newMinT = Math.round(newMinT * 1000) / 1000;
+            $("#minTSelector").val(newMinT);
+            sceneController.getSelectedObject().minT = newMinT;
+            
+            sceneController.redraw();
+        }
+        
+        var updateMaxT = function(){
+            var newMaxT = parseFloat($("#maxTSelector").val());
+            newMaxT = Math.round(newMaxT * 1000) / 1000;
+            $("#maxTSelector").val(newMaxT);
+            sceneController.getSelectedObject().maxT = newMaxT;
+            //TODO testen ob tmax größer tmin
+            
+            sceneController.redraw();
+        }
+        
+        var updateSegments = function(){
+            var newSegments = parseInt($("#segmentsSelector").val());
+            $('#segmentsSelector').val(newSegments);
+            sceneController.getSelectedObject().segments = newSegments;
+            
+            sceneController.redraw();
+        }
+
+
+        
         /*
-         * if html element changes, radius will be updated
+         * install callback functions, so if the html element changes, the value will be updated
          */
+        $("#lineWidthSelector").change(updateWidth);
+        $("#colorSelector").change(updateColor);
         $("#radiusSelector").change(updateRadius);
-    
+        $("#xTermInput").change(updateXTerm);
+        $("#yTermInput").change(updateYTerm);
+        $("#minTSelector").change(updateMinT);
+        $("#maxTSelector").change(updateMaxT);
+        $("#segmentsSelector").change(updateSegments);
+        
+        
     };
 
     // return the constructor function 

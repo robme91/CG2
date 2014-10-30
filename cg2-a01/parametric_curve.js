@@ -30,7 +30,7 @@ define(["util", "vec2", "scene", "point_dragger"],
         
         context.moveTo(x, y);
 
-        for (var i = 1; i < this.segments; i++) {
+        for (var i = 1; i <= this.segments; i++) {
             t = this.minT + i / this.segments * (this.maxT - this.minT);
             x = eval(this.xTerm);
             y = eval(this.yTerm);
