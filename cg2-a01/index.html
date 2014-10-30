@@ -44,26 +44,26 @@
         
         <div id="input_area">
             <!--Draw Style -->
-            <p id="colorLabel" hidden>Farbe wählen:</p>
+            <label id="colorLabel" hidden>Farbe wählen:</label>
             <input id="colorSelector" type="color" hidden>
-            <p id="lineWidthLabel" hidden>Linienstärke wählen :</p>
+            <label id="lineWidthLabel" hidden>Linienstärke wählen :</label>
             <input id="lineWidthSelector" type="number" hidden>
             
             <!--Circle Parameter -->
-            <p id="radiusLabel" hidden>Radius wählen:</p>
+            <label id="radiusLabel" hidden>Radius wählen:</label>
             <input id="radiusSelector" type="number" hidden>
 
             
             <!--Curve Paramters -->
-            <p id="xTermLabel" hidden>x(t):</p>
-            <input id="xTermInput" type="text" value="150 + 100 * Math.sin(t)" hidden>
-            <p id="yTermLabel" hidden>y(t):</p>
-            <input id="yTermInput" type="text" value="150 + 100 * Math.cos(t)" hidden>
-            <p id="minTLabel" hidden>min t:</p>
+            <label id="xTermLabel" hidden>x(t):</label>
+            <input id="xTermInput" type="text" class="longInput" value="150 + 100 * Math.sin(t)" hidden>
+            <label id="yTermLabel" hidden>y(t):</label>
+            <input id="yTermInput" type="text" class="longInput" value="150 + 100 * Math.cos(t)" hidden>
+            <label id="minTLabel" hidden>min t:</label>
             <input id="minTSelector" type="number" value="0" step="0.001" hidden>
-            <p id="maxTLabel" hidden>max t:</p>
+            <label id="maxTLabel" hidden>max t:</label>
             <input id="maxTSelector" type="number" value="3.14" step="0.001" hidden>
-            <p id="segmentsLabel" hidden>segments:</p>
+            <label id="segmentsLabel" hidden>segments:</label>
             <input id="segmentsSelector" type="number" value = "20" hidden>
         </div>
 
