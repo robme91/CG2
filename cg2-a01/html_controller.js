@@ -116,6 +116,7 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
                                                        parseFloat($('#minTSelector').val()),
                                                        parseFloat($('#maxTSelector').val()),
                                                        parseInt($('#segmentsSelector').val()),
+													   false, // don't show the tickmarks
                                                        style);
             scene.addObjects([paramtericCurve]);
         
@@ -162,6 +163,8 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
                 $("#maxTSelector").show();
                 $("#segmentsLabel").show();
                 $("#segmentsSelector").show();
+                $("#tickmarksLabel").show();
+                $("#tickmarksCheckbox").show();
                 
                 $("#xTermInput").val(selectedObj.xTerm);
                 $("#yTermInput").val(selectedObj.yTerm);
@@ -250,6 +253,14 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
             
             sceneController.redraw();
         }
+		
+		var updateTickmarks = function(){
+            var isChecked = $('#tickmarksCheckbox').is(':checked');
+
+            sceneController.getSelectedObject().showTickmarks = isChecked;
+            
+            sceneController.redraw();
+        }
 
 
         
@@ -264,6 +275,7 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
         $("#minTSelector").change(updateMinT);
         $("#maxTSelector").change(updateMaxT);
         $("#segmentsSelector").change(updateSegments);
+        $("#tickmarksCheckbox").change(updateTickmarks);
         
         
     };

@@ -50,6 +50,11 @@ input {
 	width: 160px;
 }
 
+/* the checkboxes are a little smaller, so they need a bigger margin */
+input[type="checkbox"] {
+	margin-top: 15px;
+}
+
 /* the labels should float to the left */
 label {
 	float: left;
