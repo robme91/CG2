@@ -35,30 +35,30 @@ h3 {
     border-style: dashed;
     border-color: #c3c3c3;
     text-align:left;
-	padding: 0px 15px;
+    padding: 0px 15px;
 }
 
 /* all input elements get a fixed width and float to the right */
 input {
     width: 80px;
-	float: right;
-	margin-top: 10px;
+    float: right;
+    margin-top: 10px;
 }
 
 /* except for the formula inputs, they must be longer */
 .longInput {
-	width: 160px;
+    width: 160px;
 }
 
 /* the checkboxes are a little smaller, so they need a bigger margin */
 input[type="checkbox"] {
-	margin-top: 15px;
+    margin-top: 15px;
 }
 
 /* the labels should float to the left */
 label {
-	float: left;
-	clear: both;
-	margin-top: 11px;
+    float: left;
+    clear: both;
+    margin-top: 11px;
 }
 

@@ -116,7 +116,7 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
                                                        parseFloat($('#minTSelector').val()),
                                                        parseFloat($('#maxTSelector').val()),
                                                        parseInt($('#segmentsSelector').val()),
-													   false, // don't show the tickmarks
+                                                       false, // don't show the tickmarks
                                                        style);
             scene.addObjects([paramtericCurve]);
         
@@ -253,8 +253,8 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
             
             sceneController.redraw();
         }
-		
-		var updateTickmarks = function(){
+        
+        var updateTickmarks = function(){
             var isChecked = $('#tickmarksCheckbox').is(':checked');
 
             sceneController.getSelectedObject().showTickmarks = isChecked;

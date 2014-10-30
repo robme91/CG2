@@ -15,7 +15,7 @@ define(["util", "vec2", "scene", "point_dragger"],
 
         this.segments = segments || 5;
 
-		this.showTickmarks = showTickmarks;
+        this.showTickmarks = showTickmarks;
 
         // draw style for drawing the line
         this.lineStyle = lineStyle || { width: "2", color: "#0000AA" };
@@ -26,15 +26,22 @@ define(["util", "vec2", "scene", "point_dragger"],
         context.beginPath();
 
         // create wrapper functions for our terms
+        var functionString = "function(t) { var result = 0; try { result = {{TERM}} ;} catch (e) { alert (\"Error: \" + e.message + '\\n\\nUse \\'t\\' for the step variable.' ); return undefined;} return result; } ;"
+
         var xTermWrapper;
-        eval("xTermWrapper = function(t) { return " + this.xTerm + "; } ;");
+        eval("xTermWrapper = " + functionString.replace(/{{TERM}}/g, this.xTerm) );
         var yTermWrapper;
-        eval("yTermWrapper = function(t) { return " + this.yTerm + "; } ;");
+        eval("yTermWrapper = " + functionString.replace(/{{TERM}}/g, this.yTerm) );
 
         var t = this.minT;
 
         var x = xTermWrapper(t);
         var y = yTermWrapper(t);
+
+        // if the output of the wrapper functions are undefined
+        // the formula is broken, so there is nothing to draw
+        if(x === undefined || y === undefined)
+            return;
 
         context.moveTo(x, y);
 
