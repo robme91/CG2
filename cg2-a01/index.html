@@ -40,30 +40,32 @@
         
         <button id="btnNewLine" type="button">New Line</button>
         <button id="btnNewCircle" type="button">New Circle</button>
-        <button id="btNewParametricCurve" type="button">New Parametric Curve</button>
+        <button id="btnNewParametricCurve" type="button">New Parametric Curve</button>
         
-        <!--Draw Style -->
-        <p id="colorLabel" hidden>Farbe wählen:</p>
-        <input id="colorSelector" type="color" hidden>
-        <p id="lineWidthLabel" hidden>Linienstärke wählen :</p>
-        <input id="lineWidthSelector" type="number" hidden>
-        
-        <!--Circle Parameter -->
-        <p id="radiusLabel" hidden>Radius wählen:</p>
-        <input id="radiusSelector" type="number" hidden>
+        <div id="input_area">
+            <!--Draw Style -->
+            <p id="colorLabel" hidden>Farbe wählen:</p>
+            <input id="colorSelector" type="color" hidden>
+            <p id="lineWidthLabel" hidden>Linienstärke wählen :</p>
+            <input id="lineWidthSelector" type="number" hidden>
+            
+            <!--Circle Parameter -->
+            <p id="radiusLabel" hidden>Radius wählen:</p>
+            <input id="radiusSelector" type="number" hidden>
 
-        
-        <!--Curve Paramters -->
-        <p id="xOfTLabel" hidden>x(t):</p>
-        <input id="xOfTInput" type="text" hidden>
-        <p id="yOfTLabel" hidden>y(t):</p>
-        <input id="yOfTInput" type="text" hidden>
-        <p id="minTLabel" hidden>min t:</p>
-        <input id="minTSelector" type="number" hidden>
-        <p id="maxTLabel" hidden>max t:</p>
-        <input id="maxTSelector" type="number" hidden>
-        <p id="segmentsLabel" hidden>segments:</p>
-        <input id="segmentsSelector" type="number" hidden>
+            
+            <!--Curve Paramters -->
+            <p id="xTermLabel" hidden>x(t):</p>
+            <input id="xTermInput" type="text" value="150 + 100 * Math.sin(t)" hidden>
+            <p id="yTermLabel" hidden>y(t):</p>
+            <input id="yTermInput" type="text" value="150 + 100 * Math.cos(t)" hidden>
+            <p id="minTLabel" hidden>min t:</p>
+            <input id="minTSelector" type="number" value="1" hidden>
+            <p id="maxTLabel" hidden>max t:</p>
+            <input id="maxTSelector" type="number" value ="3.14" hidden>
+            <p id="segmentsLabel" hidden>segments:</p>
+            <input id="segmentsSelector" type="number" value = "20" hidden>
+        </div>
 
     </div>
     

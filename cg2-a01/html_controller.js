@@ -11,8 +11,8 @@
 
  
 /* requireJS module definition */
-define(["jquery", "straight_line", "circle"], 
-       (function($, StraightLine, Circle) {
+define(["jquery", "straight_line", "circle", "parametric_curve"], 
+       (function($, StraightLine, Circle, ParametricCurve) {
 
     "use strict"; 
                 
@@ -109,15 +109,18 @@ define(["jquery", "straight_line", "circle"],
                 width: Math.floor(Math.random() * 3) + 1,
                 color: randomColor()
             };
-            
-           /**    TODO
-           *    sobald curve modul impl. dann hier entsprechende create funktionen aufrufen.    
-           */
            
+            var paramtericCurve = new ParametricCurve( $('#xTermInput').val(),
+                                                       $('#yTermInput').val(),
+                                                       parseFloat($('#minTSelector').val()),
+                                                       parseFloat($('#maxTSelector').val()),
+                                                       parseInt($('#segmentsSelector').val()),
+                                                       style);
+            scene.addObjects([paramtericCurve]);
         
             // deselect all objects, then select the newly created object
             sceneController.deselect();
-            sceneController.select(circle); // this will also redraw
+            sceneController.select(paramtericCurve); // this will also redraw
 
         }));
         
@@ -125,31 +128,51 @@ define(["jquery", "straight_line", "circle"],
         /*
          * the actual values of the figures
          */
-        var actualValues = function(){
-            var selectedObj = sceneController.getSelectedObject();
-            var width = selectedObj.lineStyle.width;
-            var color = selectedObj.lineStyle.color;
-            $("#lineWidthSelector").val(width);
-            $("#colorSelector").val(color);
+        var objectSelectionCallback = function(){
+            // hide everything
+            $("#input_area").children().hide(); 
+            
+            // show the standart inputs
             $("#lineWidthLabel").show();
             $("#lineWidthSelector").show();
             $("#colorLabel").show();
             $("#colorSelector").show();
             
+            var selectedObj = sceneController.getSelectedObject();
+            var width = selectedObj.lineStyle.width;
+            var color = selectedObj.lineStyle.color;
+            $("#lineWidthSelector").val(width);
+            $("#colorSelector").val(color);
+            
             if (selectedObj instanceof Circle){
                 $("#radiusLabel").show();
                 $("#radiusSelector").show();
+                
                 $("#radiusSelector").val(Math.round(selectedObj.radius));
-            }else{
-                $("#radiusLabel").hide();
-                $("#radiusSelector").hide();
             }
-            /**if instance of Curve....*/
+            else if (selectedObj instanceof ParametricCurve) {
+                $("#xTermLabel").show();
+                $("#xTermInput").show();
+                $("#yTermLabel").show();
+                $("#yTermInput").show();
+                $("#minTLabel").show();
+                $("#minTSelector").show();
+                $("#maxTLabel").show();
+                $("#maxTSelector").show();
+                $("#segmentsLabel").show();
+                $("#segmentsSelector").show();
+                
+                $("#xTermInput").val(selectedObj.xTerm);
+                $("#yTermInput").val(selectedObj.yTerm);
+                $("#minTSelector").val(selectedObj.minT);
+                $("#maxTSelector").val(selectedObj.maxT);
+                $("#segmentsSelector").val(selectedObj.segments);
+            }
         }
         /*
          * shows values of selected object
          */
-        sceneController.onSelection(actualValues);
+        sceneController.onSelection(objectSelectionCallback);
         
         /*
          * update the linewidth of the selected object
