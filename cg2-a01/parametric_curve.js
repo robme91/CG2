@@ -22,18 +22,24 @@ define(["util", "vec2", "scene", "point_dragger"],
     ParametricCurve.prototype.draw = function(context) {       
         // draw the curve
         context.beginPath();
-                
+        
+        // create wrapper functions for our terms
+        var xTermWrapper;
+        eval("xTermWrapper = function(t) { return " + this.xTerm + "; } ;");
+        var yTermWrapper;
+        eval("yTermWrapper = function(t) { return " + this.yTerm + "; } ;");
+        
         var t = this.minT;
-        //TODO funktion die eval aufnimmt
-        var x = eval(this.xTerm);
-        var y = eval(this.yTerm);
+        
+        var x = xTermWrapper(t);
+        var y = yTermWrapper(t);
         
         context.moveTo(x, y);
 
         for (var i = 1; i <= this.segments; i++) {
             t = this.minT + i / this.segments * (this.maxT - this.minT);
-            x = eval(this.xTerm);
-            y = eval(this.yTerm);
+            x = xTermWrapper(t);
+            y = yTermWrapper(t);
             
             context.lineTo(x, y);
             context.moveTo(x, y);
