@@ -192,10 +192,10 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
          */
         var updateColor = function(){
             var newColor = $("#colorSelector").val();
-            sceneController.getSelectedObject().lineStyle.color = newColor;
+            var selectedObject = sceneController.getSelectedObject();
+            selectedObject.lineStyle.color = newColor;
             
             // this ensures that the color of the draggers are also updated, it also redraws the scene
-            var selectedObject = sceneController.getSelectedObject();
             sceneController.deselect();
             sceneController.select(selectedObject);
         } 
@@ -205,10 +205,10 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
          */
         var updateRadius = function(){
             var newRadius = parseInt($("#radiusSelector").val());
-            sceneController.getSelectedObject().radius = newRadius;
+            var selectedObject = sceneController.getSelectedObject();
+            selectedObject.radius = newRadius;
 
             // this ensures that the color of the draggers are also updated, it also redraws the scene
-            var selectedObject = sceneController.getSelectedObject();
             sceneController.deselect();
             sceneController.select(selectedObject);
         }

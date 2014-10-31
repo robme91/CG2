@@ -75,7 +75,7 @@ define(["util", "vec2", "scene", "point_dragger"],
                 var previousPoint = this.pointArray[i - 1];
                 var nextPoint = this.pointArray[i + 1];
                 var tangent = vec2.sub(previousPoint, nextPoint);
-                var tangentNormal = [tangent[1] * (-1), tangent[0]];
+                var tangentNormal = [tangent[1] * (-1), tangent[0]]; // the normal of a vector [x,y] is [-y,x]
                 tangentNormal = vec2.mult(vec2.normalize(tangentNormal), 10); // make the tangent normal 10px long
 
                 // calculate two points that are perpendicular above and below the current curve point
@@ -97,7 +97,37 @@ define(["util", "vec2", "scene", "point_dragger"],
     }
 
     // test whether the mouse position is on the curve
-    ParametricCurve.prototype.isHit = function(context,mousePos) {
+    ParametricCurve.prototype.isHit = function(context, mousePos) {
+        var lineStart = this.pointArray[0];
+
+        // iterate over all points of the curve and test if the mouse is on the line between them
+        for (var i = 1; i <= this.segments; i++) {
+            var lineEnd = this.pointArray[i];
+
+            // project point on line, get parameter of that projection point
+            var t = vec2.projectPointOnLine(mousePos, lineStart, lineEnd);
+
+            // outside the line segment?
+            if(t < 0.0 || t > 1) {
+                lineStart = lineEnd;
+                continue;
+            }
+
+            // coordinates of the projected point
+            var p = vec2.add(lineStart, vec2.mult( vec2.sub(lineEnd, lineStart), t ));
+
+            // distance of the point from the line
+            var d = vec2.length(vec2.sub(p, mousePos));
+
+            // allow 2 pixels extra "sensitivity"
+            if (d <= (this.lineStyle.width/2) + 2) {
+                return true;
+            }
+
+            lineStart = lineEnd;
+        }
+
+        return false;
     }
 
     // return list of draggers to manipulate this curve
