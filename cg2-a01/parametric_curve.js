@@ -3,7 +3,7 @@ define(["util", "vec2", "scene", "point_dragger"],
 
     "use strict";
 
-    var ParametricCurve = function(xTerm, yTerm, minT, maxT, segments, showTickmarks, lineStyle){
+    var ParametricCurve = function(xTerm, yTerm, minT, maxT, segments, showTickmarks, lineStyle) {
         console.log("creating a parametric curve ");
 
         // initial values in case either point is undefined
@@ -11,18 +11,19 @@ define(["util", "vec2", "scene", "point_dragger"],
         this.yTerm = yTerm || "150 + 100 * Math.cos(t)";
 
         this.minT = minT || 0;
-        this.maxT = maxT || Math.PI; // TODO: später testen
+        this.maxT = maxT || Math.round(Math.PI * 1000) / 1000;
 
-        this.segments = segments || 5;
+        this.segments = segments || 20;
 
         this.showTickmarks = showTickmarks;
 
-        // draw style for drawing the line
+        // draw style for drawing the curve
         this.lineStyle = lineStyle || { width: "2", color: "#0000AA" };
 
         this.pointArray = [];
     }
 
+    // draw the curve into the provided 2D rendering context
     ParametricCurve.prototype.draw = function(context) {
         var functionString = "function(t) { var result = 0; try { result = {{TERM}} ;} catch (e) { alert (\"Error: \" + e.message + '\\n\\nPlease check the formular.\\nUse \\'t\\' for the step variable.' ); return undefined;} return result; } ;"
 

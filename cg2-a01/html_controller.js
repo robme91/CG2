@@ -11,8 +11,8 @@
 
  
 /* requireJS module definition */
-define(["jquery", "straight_line", "circle", "parametric_curve"], 
-       (function($, StraightLine, Circle, ParametricCurve) {
+define(["jquery", "straight_line", "circle", "parametric_curve", "bezier_curve"], 
+       (function($, StraightLine, Circle, ParametricCurve, BezierCurve) {
 
     "use strict"; 
                 
@@ -125,6 +125,32 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
             sceneController.select(paramtericCurve); // this will also redraw
 
         }));
+
+        /*
+         * event handler for "new bezier curve button".
+         */
+        $("#btnNewBezierCurve").click( (function() {
+            
+            // create the actual curve and add it to the scene
+            var style = { 
+                width: Math.floor(Math.random() * 3) + 1,
+                color: randomColor()
+            };
+            
+            //TODO: Random values
+            var bezierCurve = new BezierCurve([ 50,  50],
+                                              [250,  50],
+                                              [ 50, 250],
+                                              [250, 250],
+                                              parseInt($('#segmentsSelector').val()),
+                                              style);
+            scene.addObjects([bezierCurve]);
+        
+            // deselect all objects, then select the newly created object
+            sceneController.deselect();
+            sceneController.select(bezierCurve); // this will also redraw
+
+        }));
         
         
         /*
@@ -152,25 +178,37 @@ define(["jquery", "straight_line", "circle", "parametric_curve"],
                 
                 $("#radiusSelector").val(Math.round(selectedObj.radius));
             }
-            else if (selectedObj instanceof ParametricCurve) {
-                $("#xTermLabel").show();
-                $("#xTermInput").show();
-                $("#yTermLabel").show();
-                $("#yTermInput").show();
-                $("#minTLabel").show();
-                $("#minTSelector").show();
-                $("#maxTLabel").show();
-                $("#maxTSelector").show();
-                $("#segmentsLabel").show();
-                $("#segmentsSelector").show();
-                $("#tickmarksLabel").show();
-                $("#tickmarksCheckbox").show();
-                
-                $("#xTermInput").val(selectedObj.xTerm);
-                $("#yTermInput").val(selectedObj.yTerm);
-                $("#minTSelector").val(selectedObj.minT);
-                $("#maxTSelector").val(selectedObj.maxT);
-                $("#segmentsSelector").val(selectedObj.segments);
+            else {
+                if (selectedObj instanceof ParametricCurve) {
+                    $("#xTermLabel").show();
+                    $("#xTermInput").show();
+                    $("#yTermLabel").show();
+                    $("#yTermInput").show();
+                    $("#minTLabel").show();
+                    $("#minTSelector").show();
+                    $("#maxTLabel").show();
+                    $("#maxTSelector").show();
+                    $("#segmentsLabel").show();
+                    $("#segmentsSelector").show();
+                    $("#tickmarksLabel").show();
+                    $("#tickmarksCheckbox").show();
+                    
+                    $("#xTermInput").val(selectedObj.xTerm);
+                    $("#yTermInput").val(selectedObj.yTerm);
+                    $("#minTSelector").val(selectedObj.minT);
+                    $("#maxTSelector").val(selectedObj.maxT);
+                    $("#segmentsSelector").val(selectedObj.segments);
+                }
+                if (selectedObj instanceof BezierCurve) {
+                    $("#xTermLabel").hide();
+                    $("#xTermInput").hide();
+                    $("#yTermLabel").hide();
+                    $("#yTermInput").hide();
+                    $("#minTLabel").hide();
+                    $("#minTSelector").hide();
+                    $("#maxTLabel").hide();
+                    $("#maxTSelector").hide();
+                }
             }
         }
         /*
