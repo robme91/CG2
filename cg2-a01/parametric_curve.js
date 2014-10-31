@@ -133,7 +133,7 @@ define(["util", "vec2", "scene", "point_dragger"],
 
     // return list of draggers to manipulate this curve
     ParametricCurve.prototype.createDraggers = function() {
-        return {};
+        return [];
     }
 
 

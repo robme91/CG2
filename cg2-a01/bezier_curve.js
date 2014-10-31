@@ -29,7 +29,7 @@
         ParametricCurve.prototype.draw.call(this, context);
     }
 
-    // calculate the formula with the current position values
+    // calculate the formulas with the current position values
     BezierCurve.prototype.calulateTerms = function (element, t) {
         this.xTerm = "Math.pow((1 - t), 3) * " + this.point1[0] + " + 3 * Math.pow((1 - t), 2) * t * " + this.point2[0] + " + 3 * (1 - t) * t * t * " + this.point3[0] + " + Math.pow(t, 3) * " + this.point4[0];
         this.yTerm = "Math.pow((1 - t), 3) * " + this.point1[1] + " + 3 * Math.pow((1 - t), 2) * t * " + this.point2[1] + " + 3 * (1 - t) * t * t * " + this.point3[1] + " + Math.pow(t, 3) * " + this.point4[1];
@@ -47,10 +47,18 @@
         var getP3 = function() { return _bezierCurve.point3; };
         var getP4 = function() { return _bezierCurve.point4; };
 
-        var setP1 = function(dragEvent) { _bezierCurve.point1 = dragEvent.position; };
+        var setP1 = function(dragEvent) { 
+            var difference = vec2.sub(dragEvent.position, _bezierCurve.point1);
+            _bezierCurve.point2 = vec2.add(_bezierCurve.point2, difference);
+            _bezierCurve.point1 = dragEvent.position;
+        };
         var setP2 = function(dragEvent) { _bezierCurve.point2 = dragEvent.position; };
         var setP3 = function(dragEvent) { _bezierCurve.point3 = dragEvent.position; };
-        var setP4 = function(dragEvent) { _bezierCurve.point4 = dragEvent.position; };
+        var setP4 = function(dragEvent) { 
+            var difference = vec2.sub(dragEvent.position, _bezierCurve.point4);
+            _bezierCurve.point3 = vec2.add(_bezierCurve.point3, difference);
+            _bezierCurve.point4 = dragEvent.position;
+        };
 
         draggers.push( new PointDragger(getP1, setP1, draggerStyle) );
         draggers.push( new PointDragger(getP2, setP2, draggerStyle) );
