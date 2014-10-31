@@ -30,7 +30,7 @@ h3 {
 #param_area {
     float:left;
     width: 250px;
-    height:400px;
+    height:410px;
     border-width:1px;
     border-style: dashed;
     border-color: #c3c3c3;
@@ -62,3 +62,10 @@ label {
     margin-top: 11px;
 }
 
+/* make the buttons alle the same size and one per line*/
+button {
+    float: left;
+    clear: both;
+    width: 200px;
+    margin-bottom: 2px;
+}
