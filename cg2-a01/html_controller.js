@@ -110,12 +110,28 @@ define(["jquery", "straight_line", "circle", "parametric_curve", "bezier_curve"]
                 color: randomColor()
             };
             
-            //TODO: Random values
-            var paramtericCurve = new ParametricCurve( $('#xTermInput').val(),
-                                                       $('#yTermInput').val(),
+            //creating Random Values for xTerm
+            var xOffset = Math.floor(Math.random() * 150) + 50;
+            var xCompression =  Math.floor(Math.random() * 100) + 50;
+            var xTermRandom = xOffset + " + " + xCompression + " * Math.sin(t)";
+            
+            //creating random values for yTerm
+            var yOffset = Math.floor(Math.random() * 150) + 50;
+            var yCompression =  Math.floor(Math.random() * 100) + 50;
+            var yTermRandom = yOffset + " + " + yCompression + " * Math.cos(t)";
+            
+            //creating random value for segments
+            var randomSegments = Math.floor(Math.random()*21)+4;
+            
+            //creating random value for maxT
+            var randomMaxT = Math.floor(Math.random()*10)+1;
+           
+            
+            var paramtericCurve = new ParametricCurve( xTermRandom,
+                                                       yTermRandom,
                                                        parseFloat($('#minTSelector').val()),
-                                                       parseFloat($('#maxTSelector').val()),
-                                                       parseInt($('#segmentsSelector').val()),
+                                                       randomMaxT,
+                                                       randomSegments,
                                                        false, // don't show the tickmarks
                                                        style);
             scene.addObjects([paramtericCurve]);
@@ -137,11 +153,16 @@ define(["jquery", "straight_line", "circle", "parametric_curve", "bezier_curve"]
                 color: randomColor()
             };
             
-            //TODO: Random values
-            var bezierCurve = new BezierCurve([ 50,  50],
-                                              [250,  50],
-                                              [ 50, 250],
-                                              [250, 250],
+            //create random values for control points
+            function randomPoint(){
+                return Math.floor(Math.random()*250)+30;
+            }
+ 
+            
+            var bezierCurve = new BezierCurve([randomPoint(), randomPoint()],
+                                              [randomPoint(), randomPoint()],
+                                              [randomPoint(), randomPoint()],
+                                              [randomPoint(), randomPoint()],
                                               parseInt($('#segmentsSelector').val()),
                                               style);
             scene.addObjects([bezierCurve]);
