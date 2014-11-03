@@ -1,8 +1,9 @@
- define(["util", "vec2", "scene", "point_dragger", "parametric_curve"],
-       (function(Util, vec2, Scene, PointDragger, ParametricCurve) {
+ define(["util", "vec2", "scene", "point_dragger", "parametric_curve", "line_dragger"],
+       (function(Util, vec2, Scene, PointDragger, ParametricCurve, LineDragger) {
 
     "use strict";
-
+     //TODO Bug: nur die letzte bezier kurve kann ausgewählt werden. durch klicken auf die vorherigen kurven werden keine dragger ausgewählt
+     
     var BezierCurve = function(point1, point2, point3, point4, segments, lineStyle) {
         this.point1 = point1 || [ 50,  50];
         this.point2 = point2 || [250,  50];
@@ -37,7 +38,9 @@
 
     // return list of draggers to manipulate this curve
     BezierCurve.prototype.createDraggers = function () {
-        var draggerStyle = { radius: 4, color: this.lineStyle.color, width: 0, fill: true }
+             
+        //point dragger for manipulating the curve
+        var pointDraggerStyle = { radius: 4, color: this.lineStyle.color, width: 0, fill: true }
         var draggers = [];
 
         // create closure and callbacks for dragger
@@ -63,14 +66,21 @@
         };
 
         // add endpoint draggers
-        draggers.push( new PointDragger(getP1, setP1, draggerStyle) );
-        draggers.push( new PointDragger(getP4, setP4, draggerStyle) );
+        draggers.push( new PointDragger(getP1, setP1, pointDraggerStyle) );
+        draggers.push( new PointDragger(getP4, setP4, pointDraggerStyle) );
         
         // add tangent draggers
-        draggerStyle.fill = false;
-        draggers.push( new PointDragger(getP2, setP2, draggerStyle) );
-        draggers.push( new PointDragger(getP3, setP3, draggerStyle) );
-
+        pointDraggerStyle.fill = false;
+        draggers.push( new PointDragger(getP2, setP2, pointDraggerStyle) );
+        draggers.push( new PointDragger(getP3, setP3, pointDraggerStyle) );
+        
+        //create ControlPolygoneDragger
+        var lineDraggerStyle = {color: this.lineStyle.color, width: 0}
+        
+        var pointArray = [this.point1, this.point2, this.point3, this.point4];
+        draggers.push( new LineDragger(pointArray, lineDraggerStyle) );
+        //TODO wenn kurve bewegt wird dnan müssen dragger sich auch mit bewegen!!!
+        
         return draggers;
     }
 
