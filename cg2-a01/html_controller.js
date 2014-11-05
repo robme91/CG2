@@ -32,6 +32,11 @@ define(["jquery", "straight_line", "circle", "parametric_curve", "bezier_curve"]
         var randomY = function() { 
             return Math.floor(Math.random()*(context.canvas.height-10))+5; 
         };
+        
+        // generate a random point within the canvas
+        function randomPoint(){
+            return [randomX(), randomY()];
+        }
             
         // generate random color in hex notation
         var randomColor = function() {
@@ -121,15 +126,15 @@ define(["jquery", "straight_line", "circle", "parametric_curve", "bezier_curve"]
             var yTermRandom = yOffset + " + " + yCompression + " * Math.cos(t)";
             
             //creating random value for segments
-            var randomSegments = Math.floor(Math.random()*21)+4;
+            var randomSegments = Math.floor(Math.random() * 20) + 20;
             
             //creating random value for maxT
-            var randomMaxT = Math.floor(Math.random()*10)+1;
+            var randomMaxT = Math.floor(Math.random() * 10)+1;
            
             
             var paramtericCurve = new ParametricCurve( xTermRandom,
                                                        yTermRandom,
-                                                       parseFloat($('#minTSelector').val()),
+                                                       0,
                                                        randomMaxT,
                                                        randomSegments,
                                                        false, // don't show the tickmarks
@@ -153,17 +158,15 @@ define(["jquery", "straight_line", "circle", "parametric_curve", "bezier_curve"]
                 color: randomColor()
             };
             
-            //create random values for control points
-            function randomPoint(){
-                return Math.floor(Math.random()*250)+30;
-            }
- 
+            //creating random value for segments
+            var randomSegments = Math.floor(Math.random() * 20) + 20;
             
-            var bezierCurve = new BezierCurve([randomPoint(), randomPoint()],
-                                              [randomPoint(), randomPoint()],
-                                              [randomPoint(), randomPoint()],
-                                              [randomPoint(), randomPoint()],
-                                              parseInt($('#segmentsSelector').val()),
+            
+            var bezierCurve = new BezierCurve(randomPoint(),
+                                              randomPoint(),
+                                              randomPoint(),
+                                              randomPoint(),
+                                              randomSegments,
                                               style);
             scene.addObjects([bezierCurve]);
         
