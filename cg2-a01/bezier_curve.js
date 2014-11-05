@@ -2,7 +2,6 @@
        (function(Util, vec2, Scene, PointDragger, ParametricCurve, LineDragger) {
 
     "use strict";
-     //TODO Bug: nur die letzte bezier kurve kann ausgewählt werden. durch klicken auf die vorherigen kurven werden keine dragger ausgewählt
      
     var BezierCurve = function(point1, point2, point3, point4, segments, lineStyle) {
         this.point1 = point1 || [ 50,  50];

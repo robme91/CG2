@@ -43,7 +43,11 @@ define(["util", "vec2", "scene", "point_dragger"],
         if (x === undefined || y === undefined)
             return;
 
-        this.pointArray[0] = [x, y];
+        // clear the point array
+        this.pointArray = [];
+
+        // add the first element
+        this.pointArray.push([x, y]);
 
         // draw the curve
         context.beginPath();
@@ -51,12 +55,15 @@ define(["util", "vec2", "scene", "point_dragger"],
         context.moveTo(x, y);
 
         for (var i = 1; i <= this.segments; i++) {
+            // calculate the next point
             t = this.minT + i / this.segments * (this.maxT - this.minT);
             x = xTermWrapper(t);
             y = yTermWrapper(t);
 
-            this.pointArray[i] = [x, y];
+            // save that point
+            this.pointArray.push([x, y]);
 
+            // finally draw it
             context.lineTo(x, y);
         }
 
