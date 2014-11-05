@@ -300,7 +300,6 @@ define(["jquery", "straight_line", "circle", "parametric_curve", "bezier_curve"]
             newMaxT = Math.round(newMaxT * 1000) / 1000;
             $("#maxTSelector").val(newMaxT);
             sceneController.getSelectedObject().maxT = newMaxT;
-            //TODO testen ob tmax größer tmin
             
             sceneController.redraw();
         }

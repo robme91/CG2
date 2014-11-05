@@ -57,19 +57,7 @@ define(["util", "scene"],
      * test whether the specified mouse position "hits" this dragger
      */
     LineDragger.prototype.isHit = function (context,mousePos) {
-    //TODO funktionierende isHit schreiben
-    
-    /*
-        // what is my current position?
-        var pos = this.getPos();
-    
-        // check whether distance between mouse and dragger's center
-        // is less or equal ( radius + (line width)/2 )
-        var dx = mousePos[0] - pos[0];
-        var dy = mousePos[1] - pos[1];
-        var r = this.drawStyle.radius+this.drawStyle.width/2;
-        return (dx*dx + dy*dy) <= (r*r);           
-      */
+        return false;
     };
     
     /*
@@ -77,9 +65,7 @@ define(["util", "scene"],
      * is being dragged
      */
     LineDragger.prototype.mouseDrag = function (dragEvent) {
-    
-       //TODO iwo festhalten wo die maus geklickt hat bzw. leer lassen weil soll ja keine funktion haben der line_dragger?
-            
+        // do nothing
     };
 
  
