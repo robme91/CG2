@@ -63,8 +63,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // the HtmlController. Each attribute in this.drawOptions 
         // automatically generates a corresponding checkbox in the UI.
         this.drawOptions = { "Perspective Projection": false, 
-                             "Show Triangle": true,
-                             "Show Cube": false,
+                             "Show Triangle": false,
+                             "Show Cube": true,
                              "Show Band": false,
                              "Show Ellipsoid": false
                              };                       
@@ -103,7 +103,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.triangle.draw(gl, this.programs.vertexColor);
         }
         if(this.drawOptions["Show Cube"]) {    
-            this.cube.draw(gl, this.programs.red);
+            this.cube.draw(gl, this.programs.vertexColor);
         }
         if(this.drawOptions["Show Band"]) {    
             this.band.draw(gl, this.programs.red);

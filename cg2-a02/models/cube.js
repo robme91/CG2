@@ -95,8 +95,75 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": coords 
                                                   } );
-
+        var indices = [ // front
+                        0, 1, 2,
+                        2, 3, 0,
+                        
+                        // back
+                        4, 5, 6,
+                        6, 7, 4,
+                        
+                        // left
+                         8,  9, 10,
+                        10, 11,  8,
+                        
+                        // right
+                        12, 13, 14,
+                        14, 15, 12,
+                        
+                        // top
+                        16, 17, 18,
+                        18, 19, 16,
+                        
+                        // bottom
+                        20, 21, 22,
+                        22, 23, 20
+                      ];
         
+        this.indexBuffer = new vbo.Indices(gl, { "indices": indices } );
+        
+        var colors = [
+                        // front
+                        1, 0, 0, 1,
+                        1, 0, 0, 1,
+                        1, 0, 0, 1,
+                        1, 0, 0, 1,
+                        
+                        // back
+                        1, 0, 0, 1,
+                        1, 0, 0, 1,
+                        1, 0, 0, 1,
+                        1, 0, 0, 1,
+                        
+                        // left
+                        0, 1, 0, 1,
+                        0, 1, 0, 1,
+                        0, 1, 0, 1,
+                        0, 1, 0, 1,
+                        
+                        // right
+                        0, 1, 0, 1,
+                        0, 1, 0, 1,
+                        0, 1, 0, 1,
+                        0, 1, 0, 1,
+                        
+                        // top
+                        0, 0, 1, 1,
+                        0, 0, 1, 1,
+                        0, 0, 1, 1,
+                        0, 0, 1, 1,
+                        
+                        // bottom
+                        0, 0, 1, 1,
+                        0, 0, 1, 1,
+                        0, 0, 1, 1,
+                        0, 0, 1, 1            
+                     ];
+                     
+         this.colorBuffer = new vbo.Attribute(gl, { "numComponents" : 4,
+                                                    "dataTyoe" : gl.FLOAT,
+                                                    "data" : colors
+                                                  } );
     };
 
     // draw method: activate buffers and issue WebGL draw() method
@@ -104,9 +171,10 @@ define(["vbo"],
     
         // bind the attribute buffers
         this.coordsBuffer.bind(gl, program, "vertexPosition");
+        this.colorBuffer.bind(gl, program, "vertexColor");
                 
         // draw the vertices as points
-        gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+        gl.drawElements(gl.TRIANGLES, this.indexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0); 
          
     };
         
