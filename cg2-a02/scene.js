@@ -48,7 +48,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "vMin": -Math.PI, 
             "vMax":  Math.PI, 
             "uSegments": 40,
-            "vSegments": 20
+            "vSegments": 20,
+            drawStyle: "points"
         };
         this.ellipsoid = new ParametricSurface(gl, positionFunc, config);
 
