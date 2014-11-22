@@ -38,6 +38,7 @@ define(["vbo"],
     
         // generate vertex coordinates and store in an array
         var coords = [];
+
         for(var i=0; i<=segments; i++) {
         
             // X and Z coordinates are on a circle around the origin
@@ -52,14 +53,31 @@ define(["vbo"],
             // IMPORTANT: push each float value separately!
             coords.push(x,y0,z);
             coords.push(x,y1,z);
-            
         };  
+        
         
         // create vertex buffer object (VBO) for the coordinates
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
                                                     "data": coords 
                                                   } );
+      
+        /*var indices = [];
+
+        for(var i=0; i<=segments; i++){
+            indices.push(i);
+            indices.push(i + 1);
+            indices.push(i + 2);
+            indices.push(i + 2);
+            indices.push(i + 1);
+            indices.push(i + 3);
+        }
+        console.log(indices );
+        console.log(indices.length);
+
+       //create vbo for the indices
+       this.indexBuffer = new vbo.Indices(gl, { "indices": indices } );
+      */
 
     };
 
@@ -73,6 +91,8 @@ define(["vbo"],
         // draw the vertices as points
         if(this.drawStyle == "points") {
             gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+        } else if(this.drawStyle == "surface") {
+            gl.drawElements(gl.TRIANGLES, this.indexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
         } else {
             window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
         }

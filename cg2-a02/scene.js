@@ -32,9 +32,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
 
         
         // create some objects to be drawn in this scene
-        this.triangle  = new Triangle(gl);
-        this.cube      = new Cube(gl); 
-        this.band      = new Band(gl, {height: 0.4, drawStyle: "points"});
+        this.triangle      = new Triangle(gl);
+        this.cube          = new Cube(gl); 
+        this.band          = new Band(gl, {height: 0.4, drawStyle: "points"});
+        this.wireframeBand = new Band(gl, {height: 0.4, drawStyle: "lines"});
 
         // create a parametric surface to be drawn in this scene
         var positionFunc = function(u,v) {
@@ -104,10 +105,11 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.drawOptions = { "Perspective Projection": false, 
                              "Show Triangle": false,
                              "Show Cube": false,
-                             "Show Band": false,
+                             "Show Band": true,
+                             "Show WireframeBand" : false,
                              "Show Ellipsoid": false,
                              "Show Dinis" : false,
-                             "Show Umbrella" : true
+                             "Show Umbrella" : false
                              };                       
     };
 
@@ -147,6 +149,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.cube.draw(gl, this.programs.vertexColor);
         }
         if(this.drawOptions["Show Band"]) {    
+            this.band.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show WireframeBand"]) {    
             this.band.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
