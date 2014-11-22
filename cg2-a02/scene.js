@@ -52,6 +52,45 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             drawStyle: "points"
         };
         this.ellipsoid = new ParametricSurface(gl, positionFunc, config);
+        
+        //create a Dini's Surface to be drawn in this scene (Math Function s. http://www.3d-meier.de/)
+        var positionFuncDinis = function(u,v) {
+            var a = 0.5;
+            var b = 0.2;
+            
+            return [ a * Math.cos(u) * Math.sin(v),
+                     a * Math.sin(u) * Math.sin(v),
+                     a * (Math.cos(v) + Math.log(Math.tan(v / 2))) + b * u ];
+        };
+        var configDinis = {
+            "uMin": 0, 
+            "uMax": 4 * Math.PI, 
+            "vMin": 0.01, 
+            "vMax":  2, 
+            "uSegments": 60,
+            "vSegments": 40,
+            drawStyle: "points"
+        };
+        this.dinisSurface = new ParametricSurface(gl, positionFuncDinis, configDinis);
+        
+        
+        //create a Whitney Umbrella to be drawn in this scene (Math Function s. http://www.3d-meier.de/)
+        var positionFuncUmbrella = function(u,v) {
+            return [ u * v,
+                      u,
+                     v * v];
+        };
+        var configUmbrella = {
+            "uMin": -1.5, 
+            "uMax": 1.5, 
+            "vMin": - 1.5, 
+            "vMax":  1.5, 
+            "uSegments": 60,
+            "vSegments": 60,
+            drawStyle: "points"
+        };
+        this.umbrella = new ParametricSurface(gl, positionFuncUmbrella, configUmbrella);
+        
 
         // initial position of the camera
         this.cameraTransformation = mat4.lookAt([0,0.5,3], [0,0,0], [0,1,0]);
@@ -64,9 +103,11 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // automatically generates a corresponding checkbox in the UI.
         this.drawOptions = { "Perspective Projection": false, 
                              "Show Triangle": false,
-                             "Show Cube": true,
+                             "Show Cube": false,
                              "Show Band": false,
-                             "Show Ellipsoid": false
+                             "Show Ellipsoid": false,
+                             "Show Dinis" : false,
+                             "Show Umbrella" : true
                              };                       
     };
 
@@ -110,6 +151,12 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show Dinis"]) {    
+            this.dinisSurface.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show Umbrella"]) {    
+            this.umbrella.draw(gl, this.programs.red);
         }
     };
 
