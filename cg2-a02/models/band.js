@@ -62,7 +62,7 @@ define(["vbo"],
                                                     "data": coords 
                                                   } );
       
-        /*var indices = [];
+        var indices = [];
 
         for(var i=0; i<=segments; i++){
             indices.push(i);
@@ -77,7 +77,7 @@ define(["vbo"],
 
        //create vbo for the indices
        this.indexBuffer = new vbo.Indices(gl, { "indices": indices } );
-      */
+      
 
     };
 
@@ -87,6 +87,7 @@ define(["vbo"],
         // bind the attribute buffers
         program.use();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
+        this.indexBuffer.bind(gl);
  
         // draw the vertices as points
         if(this.drawStyle == "points") {

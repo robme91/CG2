@@ -34,7 +34,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // create some objects to be drawn in this scene
         this.triangle      = new Triangle(gl);
         this.cube          = new Cube(gl); 
-        this.band          = new Band(gl, {height: 0.4, drawStyle: "points"});
+        this.band          = new Band(gl, {height: 0.4, drawStyle: "surface"});
         this.wireframeBand = new Band(gl, {height: 0.4, drawStyle: "lines"});
 
         // create a parametric surface to be drawn in this scene

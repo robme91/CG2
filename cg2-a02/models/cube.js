@@ -171,6 +171,7 @@ define(["vbo"],
     
         // bind the attribute buffers
         this.coordsBuffer.bind(gl, program, "vertexPosition");
+        this.indexBuffer.bind(gl);
         this.colorBuffer.bind(gl, program, "vertexColor");
                 
         // draw the vertices as points
