@@ -25,6 +25,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.programs.red = new Program(gl, 
                                         shaders.getVertexShader("red"), 
                                         shaders.getFragmentShader("red") );
+        this.programs.uni = new Program(gl, 
+                                        shaders.getVertexShader("unicolor"), 
+                                        shaders.getFragmentShader("unicolor") );
         this.programs.vertexColor = new Program(gl, 
                                                 shaders.getVertexShader("vertex_color"), 
                                                 shaders.getFragmentShader("vertex_color") );   
@@ -105,8 +108,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.drawOptions = { "Perspective Projection": false, 
                              "Show Triangle": false,
                              "Show Cube": false,
-                             "Show Band": true,
-                             "Show WireframeBand" : false,
+                             "Show Band": false,
+                             "Show WireframeBand" : true,
                              "Show Ellipsoid": false,
                              "Show Dinis" : false,
                              "Show Umbrella" : false
@@ -119,6 +122,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // just a shortcut
         var gl = this.gl;
 
+        
+        
         // set up the projection matrix, depending on the canvas size
         var aspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight;
         var projection = this.drawOptions["Perspective Projection"] ?
@@ -133,6 +138,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.programs[p].setUniform("modelViewMatrix", "mat4", this.transformation);
         }
         
+        
+        
+        
         // clear color and depth buffers
         gl.clearColor(0.7, 0.7, 0.7, 1.0); 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); 
@@ -141,6 +149,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);  
                 
+        // set Color for program.uni
+       // var vec4Black = [0.0, 0.0, 0.0, 1.0];
+       // this.programs.uni.setUniform("uniColor","vec4", vec4Black );
+        
         // draw the scene objects
         if(this.drawOptions["Show Triangle"]) {    
             this.triangle.draw(gl, this.programs.vertexColor);
@@ -152,7 +164,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.band.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show WireframeBand"]) {    
-            this.band.draw(gl, this.programs.red);
+            this.band.draw(gl, this.programs.uni);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);

@@ -62,21 +62,25 @@ define(["vbo"],
                                                     "data": coords 
                                                   } );
       
-        var indices = [];
-
-        for(var i=0; i<=segments; i++){
-            indices.push(i);
-            indices.push(i + 1);
-            indices.push(i + 2);
-            indices.push(i + 2);
-            indices.push(i + 1);
-            indices.push(i + 3);
+        //fill the indices for solid band
+        var solidIndices = [];
+        var segments2 = segments * 2 - 2;
+        for(var i=0; i<=segments2; i++){
+            solidIndices.push(i);
+            solidIndices.push(i + 1);
+            solidIndices.push(i + 2);
         }
-        console.log(indices );
-        console.log(indices.length);
+        solidIndices.push(segments2 + 1);
+        solidIndices.push(segments2 + 2);
+        solidIndices.push(1);
+        
 
-       //create vbo for the indices
-       this.indexBuffer = new vbo.Indices(gl, { "indices": indices } );
+       //create vbo for the solid indices
+       this.solidIndexBuffer = new vbo.Indices(gl, { "indices": solidIndices } );
+       
+       //fill the indices for wireframe band
+       var wireframeIndices = [];
+       
       
 
     };
@@ -87,12 +91,14 @@ define(["vbo"],
         // bind the attribute buffers
         program.use();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
-        this.indexBuffer.bind(gl);
+        this.solidIndexBuffer.bind(gl);
  
         // draw the vertices as points
         if(this.drawStyle == "points") {
             gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
         } else if(this.drawStyle == "surface") {
+            gl.drawElements(gl.TRIANGLES, this.solidIndexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+        } else if(this.drawStyle == "lines") {
             gl.drawElements(gl.TRIANGLES, this.indexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
         } else {
             window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
