@@ -51,6 +51,23 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": coordinates 
                                                   } );
+        //create Indices for the surface                                           
+        var solidIndices = [];
+        var length = uSegments * vSegments -  39 * vSegments;
+        for(var i = 0; i < length; i++ ){
+            if (i + 1 % (vSegments) == 0)
+                continue;
+             
+            solidIndices.push(i);
+            solidIndices.push(i + 1);
+            solidIndices.push(i + vSegments);
+            
+            solidIndices.push(i + vSegments);
+            solidIndices.push(i + vSegments + 1);
+            solidIndices.push(i + 1);
+            
+        }
+        this.solidIndexBuffer = new vbo.Indices(gl, { "indices" : solidIndices } );
 
     };  
 
@@ -64,7 +81,15 @@ define(["vbo"],
         // draw the vertices as points
         if(this.drawStyle == "points") {
             gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
-        } else {
+        }
+        else if(this.drawStyle == "surface") {
+            this.solidIndexBuffer.bind(gl);
+            gl.drawElements(gl.TRIANGLES, this.solidIndexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0 );
+        }
+        else if(this.drawStyle == "lines") {
+           // gl.drawElements(gl.LINES, , gl.UNSIGNED_SHORT, 0);
+        }
+        else {
             window.console.log("Parametric Surface: draw style " + this.drawStyle + " not implemented.");
         }
 

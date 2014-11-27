@@ -57,6 +57,12 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         };
         this.ellipsoid = new ParametricSurface(gl, positionFunc, config);
         
+        config.drawStyle = "surface";
+        this.solidEllipsoid = new ParametricSurface(gl, positionFunc, config);
+        
+        config.drawStyle = "lines";
+        this.wireframeEllipsoid = new ParametricSurface(gl, positionFunc, config);
+        
         //create a Dini's Surface to be drawn in this scene (Math Function s. http://www.3d-meier.de/)
         var positionFuncDinis = function(u,v) {
             var a = 0.5;
@@ -109,8 +115,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Triangle": false,
                              "Show Cube": false,
                              "Show Band": false,
-                             "Show WireframeBand" : true,
+                             "Show WireframeBand" : false,
                              "Show Ellipsoid": false,
+                             "Show SolidEllipsoid": true,
                              "Show Dinis" : false,
                              "Show Umbrella" : false
                              };
@@ -170,6 +177,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show SolidEllipsoid"]) {    
+            this.solidEllipsoid.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Dinis"]) {    
             this.dinisSurface.draw(gl, this.programs.red);

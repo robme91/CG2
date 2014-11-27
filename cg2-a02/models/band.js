@@ -78,8 +78,8 @@ define(["vbo"],
 
         //fill the indices for wireframe band
         var wireframeIndices = [];
-
-        for (var i = 0; i < segments * 2; i += 2) {
+        var lengthWire = segments * 2;
+        for (var i = 0; i < lengthWire; i += 2) {
             wireframeIndices.push(i);
             wireframeIndices.push(i + 1);
             wireframeIndices.push(i);
