@@ -113,7 +113,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Ellipsoid": false,
                              "Show Dinis" : false,
                              "Show Umbrella" : false
-                             };                       
+                             };
     };
 
     // the scene's draw method draws whatever the scene wants to draw
@@ -138,7 +138,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.programs[p].setUniform("modelViewMatrix", "mat4", this.transformation);
         }
         
-        
+        //UNI Program activate and set color
+        this.programs.uni.use();
+        this.programs.uni.setUniform("uniColor", "vec4", [0.0, 0.0, 0.0, 1.0]);
         
         
         // clear color and depth buffers
@@ -164,7 +166,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.band.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show WireframeBand"]) {    
-            this.band.draw(gl, this.programs.uni);
+            this.wireframeBand.draw(gl, this.programs.uni);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);

@@ -64,24 +64,31 @@ define(["vbo"],
       
         //fill the indices for solid band
         var solidIndices = [];
-        var segments2 = segments * 2 - 2;
-        for(var i=0; i<=segments2; i++){
+        var length = segments * 2 - 1;
+        for(var i = 0; i <= length; i++){
             solidIndices.push(i);
             solidIndices.push(i + 1);
             solidIndices.push(i + 2);
         }
-        solidIndices.push(segments2 + 1);
-        solidIndices.push(segments2 + 2);
         solidIndices.push(1);
         
 
-       //create vbo for the solid indices
-       this.solidIndexBuffer = new vbo.Indices(gl, { "indices": solidIndices } );
-       
-       //fill the indices for wireframe band
-       var wireframeIndices = [];
-       
-      
+        //create vbo for the solid indices
+        this.solidIndexBuffer = new vbo.Indices(gl, { "indices": solidIndices } );
+
+        //fill the indices for wireframe band
+        var wireframeIndices = [];
+
+        for (var i = 0; i < segments * 2; i += 2) {
+            wireframeIndices.push(i);
+            wireframeIndices.push(i + 1);
+            wireframeIndices.push(i);
+            wireframeIndices.push(i + 2);
+            wireframeIndices.push(i + 1);
+            wireframeIndices.push(i + 3);
+        }
+        
+        this.wireFrameIndexBuffer = new vbo.Indices(gl, { "indices": wireframeIndices } );
 
     };
 
@@ -91,16 +98,20 @@ define(["vbo"],
         // bind the attribute buffers
         program.use();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
-        this.solidIndexBuffer.bind(gl);
  
         // draw the vertices as points
         if(this.drawStyle == "points") {
             gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
-        } else if(this.drawStyle == "surface") {
+        } 
+        else if(this.drawStyle == "surface") {
+            this.solidIndexBuffer.bind(gl);
             gl.drawElements(gl.TRIANGLES, this.solidIndexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
-        } else if(this.drawStyle == "lines") {
-            gl.drawElements(gl.TRIANGLES, this.indexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
-        } else {
+        } 
+        else if(this.drawStyle == "lines") {
+            this.wireFrameIndexBuffer.bind(gl);
+            gl.drawElements(gl.LINES, this.wireFrameIndexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+        } 
+        else {
             window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
         }
          
