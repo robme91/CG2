@@ -34,15 +34,29 @@ define(["vbo"],
         if (config.vMin > config.vMax)
             console.log("vMin must be greater than vMax");
 
-        var uStep = (Math.abs(config.uMin) + Math.abs(config.uMax)) / uSegments;
-        var vStep = (Math.abs(config.vMin) + Math.abs(config.vMax)) / vSegments;
+        var uStep = (config.uMax - config.uMin) / uSegments;
+        var vStep = (config.vMax - config.vMin) / vSegments;
         
         var coordinates = [];
-        for (var u = config.uMin; u < config.uMax; u += uStep) {
-            for (var v = config.vMin; v < config.vMax; v += vStep) {
+        var solidIndices = [];
+        for (var uMul = 0; uMul <= uSegments; uMul++) {
+            for (var vMul = 0; vMul <= vSegments; vMul++) {
+                var u = config.uMin + uStep * uMul;
+                var v = config.vMin + vStep * vMul;
+                
+                var position = posFunc(u, v);
                 // IMPORTANT: push each float value separately!
-                var pos = posFunc(u, v);
-                coordinates.push(pos[0], pos[1], pos[2]);
+                coordinates.push(position[0], position[1], position[2]);
+                
+                // create indices
+                if ( uMul > 0 && vMul > 0) {
+                    var indexA = coordinates.length / 3 - 1;
+                    var indexB = indexA - 1;
+                    var indexC = indexA - vSegments - 1;
+                    var indexD = indexC - 1;
+                    solidIndices.push( indexC, indexB, indexA,
+                                       indexC, indexD, indexB );
+                }
             }
         }
         
@@ -51,22 +65,7 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": coordinates 
                                                   } );
-        //create Indices for the surface                                           
-        var solidIndices = [];
-        var length = uSegments * vSegments -  39 * vSegments;
-        for(var i = 0; i < length; i++ ){
-            if (i + 1 % (vSegments) == 0)
-                continue;
-             
-            solidIndices.push(i);
-            solidIndices.push(i + 1);
-            solidIndices.push(i + vSegments);
-            
-            solidIndices.push(i + vSegments);
-            solidIndices.push(i + vSegments + 1);
-            solidIndices.push(i + 1);
-            
-        }
+
         this.solidIndexBuffer = new vbo.Indices(gl, { "indices" : solidIndices } );
 
     };  
