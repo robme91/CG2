@@ -159,9 +159,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);  
                 
-        // set Color for program.uni
-       // var vec4Black = [0.0, 0.0, 0.0, 1.0];
-       // this.programs.uni.setUniform("uniColor","vec4", vec4Black );
+        // enable polygon offset for overlaying objects against z-fighting
+        gl.enable(gl.POLYGON_OFFSET_FILL);
+        gl.polygonOffset(1.0, 1.0);
         
         // draw the scene objects
         if(this.drawOptions["Show Triangle"]) {    
