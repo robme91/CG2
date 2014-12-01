@@ -79,9 +79,12 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "vMax":  2, 
             "uSegments": 60,
             "vSegments": 40,
-            drawStyle: "points"
+            drawStyle: "surface"
         };
         this.dinisSurface = new ParametricSurface(gl, positionFuncDinis, configDinis);
+        
+        configDinis.drawStyle = "wireframe";
+        this.wireframeDinis = new ParametricSurface(gl, positionFuncDinis, configDinis);
         
         
         //create a Whitney Umbrella to be drawn in this scene (Math Function s. http://www.3d-meier.de/)
@@ -97,10 +100,12 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "vMax":  1.5, 
             "uSegments": 60,
             "vSegments": 60,
-            drawStyle: "points"
+            drawStyle: "surface"
         };
         this.umbrella = new ParametricSurface(gl, positionFuncUmbrella, configUmbrella);
         
+        configUmbrella.drawStyle = "wireframe";
+        this.wireframeUmbrella = new ParametricSurface(gl, positionFuncUmbrella, configUmbrella);
 
         // initial position of the camera
         this.cameraTransformation = mat4.lookAt([0,0.5,3], [0,0,0], [0,1,0]);
@@ -120,7 +125,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show SolidEllipsoid": true,
                              "Show WireframeEllipsoid": false,
                              "Show Dinis" : false,
-                             "Show Umbrella" : false
+                             "Show WireframeDinis" : false,
+                             "Show Umbrella" : false,
+                             "Show WireframeUmbrella" : false
                              };
     };
 
@@ -188,8 +195,14 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         if(this.drawOptions["Show Dinis"]) {    
             this.dinisSurface.draw(gl, this.programs.red);
         }
+        if(this.drawOptions["Show WireframeDinis"]) {    
+            this.wireframeDinis.draw(gl, this.programs.uni);
+        }
         if(this.drawOptions["Show Umbrella"]) {    
             this.umbrella.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show WireframeUmbrella"]) {    
+            this.wireframeUmbrella.draw(gl, this.programs.uni);
         }
     };
 
