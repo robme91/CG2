@@ -87,7 +87,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         //create a Whitney Umbrella to be drawn in this scene (Math Function s. http://www.3d-meier.de/)
         var positionFuncUmbrella = function(u,v) {
             return [ u * v,
-                      u,
+                         u,
                      v * v];
         };
         var configUmbrella = {
