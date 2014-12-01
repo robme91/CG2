@@ -39,6 +39,8 @@ define(["vbo"],
         
         var coordinates = [];
         var solidIndices = [];
+        var wireframeIndices = [];
+        
         for (var uMul = 0; uMul <= uSegments; uMul++) {
             for (var vMul = 0; vMul <= vSegments; vMul++) {
                 var u = config.uMin + uStep * uMul;
@@ -54,8 +56,13 @@ define(["vbo"],
                     var indexB = indexA - 1;
                     var indexC = indexA - vSegments - 1;
                     var indexD = indexC - 1;
+                    
                     solidIndices.push( indexC, indexB, indexA,
                                        indexC, indexD, indexB );
+                    wireframeIndices.push( indexB, indexA,
+                                           indexA, indexC,
+                                           indexC, indexD,
+                                           indexD, indexB);
                 }
             }
         }
@@ -66,8 +73,8 @@ define(["vbo"],
                                                     "data": coordinates 
                                                   } );
 
-        this.solidIndexBuffer = new vbo.Indices(gl, { "indices" : solidIndices } );
-
+        this.solidIndexBuffer = new vbo.Indices(gl, { "indices": solidIndices } );
+        this.wireframeIndexBuffer = new vbo.Indices(gl, { "indices": wireframeIndices } );
     };  
 
     // draw method: activate buffers and issue WebGL draw() method
@@ -85,8 +92,9 @@ define(["vbo"],
             this.solidIndexBuffer.bind(gl);
             gl.drawElements(gl.TRIANGLES, this.solidIndexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0 );
         }
-        else if(this.drawStyle == "lines") {
-           // gl.drawElements(gl.LINES, , gl.UNSIGNED_SHORT, 0);
+        else if(this.drawStyle == "wireframe") {
+            this.wireframeIndexBuffer.bind(gl);
+            gl.drawElements(gl.LINES, this.wireframeIndexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
         }
         else {
             window.console.log("Parametric Surface: draw style " + this.drawStyle + " not implemented.");
