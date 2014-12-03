@@ -40,7 +40,10 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
      * the Y axis over time. 
      */
     var makeAnimation = function(scene) {
-    
+        
+        var cylinderLiftTime = 0;
+        var direction = -1;
+        
         // create animation to rotate the scene
         var animation = new Animation( (function(t, deltaT) {
 
@@ -49,7 +52,19 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
 
             // ask the scene to rotate around Y axis
             scene.rotate("worldY", angle); 
-                        
+            
+            // rotate the flower in the robots hand
+            var flowerAngle = deltaT / 1000 * 250;
+            scene.rotate("flower", flowerAngle);
+            
+            cylinderLiftTime += deltaT;
+            if (cylinderLiftTime > 1500) {
+                cylinderLiftTime %= 1500;
+                direction *= -1;
+            }
+            
+            scene.rotate("cylinder", deltaT / 1000 * 50 * direction);
+            
             // (re-) draw the scene
             scene.draw();
             
