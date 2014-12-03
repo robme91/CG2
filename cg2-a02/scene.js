@@ -165,10 +165,6 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // set up depth test to discard occluded fragments
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);  
-                
-        // enable polygon offset for overlaying objects against z-fighting
-        gl.enable(gl.POLYGON_OFFSET_FILL);
-        gl.polygonOffset(1.0, 1.0);
         
         // draw the scene objects
         if(this.drawOptions["Show Triangle"]) {    

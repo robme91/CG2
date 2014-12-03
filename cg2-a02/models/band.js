@@ -104,8 +104,14 @@ define(["vbo"],
             gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
         } 
         else if(this.drawStyle == "surface") {
+            // enable polygon offset for overlaying objects against z-fighting
+            gl.enable(gl.POLYGON_OFFSET_FILL);
+            gl.polygonOffset(1.0, 1.0);
+            
             this.solidIndexBuffer.bind(gl);
             gl.drawElements(gl.TRIANGLES, this.solidIndexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+            
+            gl.disable(gl.POLYGON_OFFSET_FILL);
         } 
         else if(this.drawStyle == "lines") {
             this.wireFrameIndexBuffer.bind(gl);
