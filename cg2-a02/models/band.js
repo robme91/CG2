@@ -113,7 +113,7 @@ define(["vbo"],
             
             gl.disable(gl.POLYGON_OFFSET_FILL);
         } 
-        else if(this.drawStyle == "lines") {
+        else if(this.drawStyle == "wireframe") {
             this.wireFrameIndexBuffer.bind(gl);
             gl.drawElements(gl.LINES, this.wireFrameIndexBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
         } 

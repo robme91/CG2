@@ -8,8 +8,8 @@
 
 /* requireJS module definition */
 define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "models/cube",
-        "models/parametric"], 
-       (function(glmatrix, Program, shaders, Band, Triangle, Cube, ParametricSurface ) {
+        "models/parametric", "models/robot"], 
+       (function(glmatrix, Program, shaders, Band, Triangle, Cube, ParametricSurface, Robot ) {
 
     "use strict";
     
@@ -38,7 +38,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.triangle      = new Triangle(gl);
         this.cube          = new Cube(gl); 
         this.band          = new Band(gl, {height: 0.4, drawStyle: "surface"});
-        this.wireframeBand = new Band(gl, {height: 0.4, drawStyle: "lines"});
+        this.wireframeBand = new Band(gl, {height: 0.4, drawStyle: "wireframe"});
 
         // create a parametric surface to be drawn in this scene
         var positionFunc = function(u,v) {
@@ -106,9 +106,12 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         
         configUmbrella.drawStyle = "wireframe";
         this.wireframeUmbrella = new ParametricSurface(gl, positionFuncUmbrella, configUmbrella);
+        
+        // robot
+        this.robot = new Robot(gl, this.programs); // TODO: draw style not defined. Is it nesseccary?
 
         // initial position of the camera
-        this.cameraTransformation = mat4.lookAt([0,0.5,3], [0,0,0], [0,1,0]);
+        this.cameraTransformation = mat4.lookAt([0,0,5], [0,0,0], [0,1,0]);
 
         // transformation of the scene, to be changed by animation
         this.transformation = mat4.create(this.cameraTransformation);
@@ -116,18 +119,19 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // the scene has an attribute "drawOptions" that is used by 
         // the HtmlController. Each attribute in this.drawOptions 
         // automatically generates a corresponding checkbox in the UI.
-        this.drawOptions = { "Perspective Projection": false, 
+        this.drawOptions = { "Perspective Projection": true, 
                              "Show Triangle": false,
                              "Show Cube": false,
                              "Show Band": false,
                              "Show WireframeBand" : false,
                              "Show Ellipsoid": false,
-                             "Show SolidEllipsoid": true,
+                             "Show SolidEllipsoid": false,
                              "Show WireframeEllipsoid": false,
                              "Show Dinis" : false,
                              "Show WireframeDinis" : false,
                              "Show Umbrella" : false,
-                             "Show WireframeUmbrella" : false
+                             "Show WireframeUmbrella" : false,
+                             "Show Robot": true
                              };
     };
 
@@ -199,6 +203,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         }
         if(this.drawOptions["Show WireframeUmbrella"]) {    
             this.wireframeUmbrella.draw(gl, this.programs.uni);
+        }
+        if(this.drawOptions["Show Robot"]) {    
+            this.robot.draw(gl, null, this.transformation);
         }
     };
 
