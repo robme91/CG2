@@ -226,6 +226,12 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             case "worldX": 
                 mat4.rotate(this.transformation, angle, [1,0,0]);
                 break;
+            case "flower":
+                this.robot.rotate(rotationAxis, angle);
+                break;
+            case "cylinder":
+                this.robot.rotate(rotationAxis, angle);
+                break;
             default:
                 window.console.log("axis " + rotationAxis + " not implemented.");
             break;

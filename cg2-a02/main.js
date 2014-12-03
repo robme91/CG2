@@ -83,7 +83,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
         var throwOnGLError = function(err, funcName, args) {
             throw WebGLDebugUtils.glEnumToString(err) + " was caused by call to: " + funcName;
         };
-        var gl=WebGLDebugUtils.makeDebugContext(gl, throwOnGLError);
+        //var gl=WebGLDebugUtils.makeDebugContext(gl, throwOnGLError);
         
         return gl;
     };
@@ -104,7 +104,11 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
              'x': {axis: "worldX", angle:  5.0}, 
              'X': {axis: "worldX", angle: -5.0}, 
              'y': {axis: "worldY", angle:  5.0}, 
-             'Y': {axis: "worldY", angle: -5.0}
+             'Y': {axis: "worldY", angle: -5.0},
+             'f': {axis: "flower", angle:  8.0},
+             'F': {axis: "flower", angle: -8.0},
+             'h': {axis: "cylinder", angle: -2.0},
+             'H': {axis: "cylinder", angle: 2.0}
         };
 
         // create HtmlController that takes care of all interaction

@@ -208,5 +208,20 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
         this.torso.draw(gl, program, transformation);
     };
     
+    Robot.prototype.rotate = function(rotationAxis, angle) {
+        // manipulate the corresponding matrix, depending on the name of the joint
+        switch(rotationAxis) {
+            case "flower":
+                mat4.rotate(this.wristRight.transformation, angle, [0, 1, 0]);
+                break; 
+            case "cylinder":
+                mat4.rotate(this.shoulderLeft.transformation, angle, [0, 0, 1]);
+                break;
+            default:
+                window.console.log("axis " + rotationAxis + " not implemented.");
+            break;
+        };
+    }
+    
     return Robot;
  }));
