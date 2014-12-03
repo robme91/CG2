@@ -111,7 +111,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.robot = new Robot(gl, this.programs); // TODO: draw style not defined. Is it nesseccary?
 
         // initial position of the camera
-        this.cameraTransformation = mat4.lookAt([0,2,4], [0,0.5,0], [0,1,0]);
+        this.cameraTransformation = mat4.lookAt([0,1,4], [0,0.5,0], [0,1,0]);
 
         // transformation of the scene, to be changed by animation
         this.transformation = mat4.create(this.cameraTransformation);
@@ -230,6 +230,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                 this.robot.rotate(rotationAxis, angle);
                 break;
             case "cylinder":
+                this.robot.rotate(rotationAxis, angle);
+                break;
+            case "eye":
                 this.robot.rotate(rotationAxis, angle);
                 break;
             default:

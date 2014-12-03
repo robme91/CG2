@@ -23,7 +23,6 @@ body {
 /* container to display editable parameters */
 #param_area {
     float:left;
-    width:300px;
     height:400px;
     border-width:1px;
     border-style: dashed;
@@ -34,6 +33,7 @@ body {
 td {
     vertical-align:top;
     text-align:left;
+    min-width: 200px;
 }
 
 /* some input elements get a fixed width */

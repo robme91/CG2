@@ -9,6 +9,7 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
     var Robot = function(gl, programs, config) {
         //create robot elements
         var cube = new Cube(gl);
+        var triangle = new Triangle(gl);
         var solidBand = new Band(gl, {height: 1.0, radius: 0.5, drawStyle: "surface"});
         var wireframeBand = new Band(gl, {height: 1.0, radius: 0.5, drawStyle: "wireframe"});
  
@@ -56,17 +57,21 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
         var wireframeDinis = new ParametricSurface(gl, positionFuncDinis, configDinis);
         
         //set sizes
-        var torsoSize    = [0.6 , 1.0 , 0.4];
-        var neckSize     = [0.25, 0.15, 0.2];
-        var headSize     = [0.5 , 0.5 , 0.3];
-        var cylinderSize = [0.5 , 0.5 , 0.45];
-        var footSize     = [0.2 , 0.2 , 0.6];
-        var jointSize    = [0.15, 0.2 , 0.2];
-        var armSize      = [0.35 , 0.3 , 0.2];
-        var flowerSize   = [0.8, 0.3, 0.8];
+        var torsoSize       = [0.4 , 1.0 , 0.6 ];
+        var neckSize        = [0.25, 0.15, 0.2 ];
+        var headSize        = [0.5 , 0.5 , 0.3 ];
+        var eyeSize         = [0.2 , 0.25, 0.05];
+        var beardSize       = [0.25, 0.25, 1.0 ];
+        var cylinderSize    = [0.5 , 0.5 , 0.45];
+        var cylinderRimSize = [0.65, 0.05, 0.6 ]; 
+        var footSize        = [0.2 , 0.2 , 0.6 ];
+        var jointSize       = [0.15, 0.2 , 0.2 ]; // haha
+        var armSize         = [0.35, 0.3 , 0.2 ];
+        var flowerSize      = [0.7 , 0.3 , 0.7 ];
         
         
-        //Skelett
+        // Skelett
+        // torso, neck, head, eye, beard
         this.torso = new SceneNode("torso");
         
         this.neck = new SceneNode("neck");
@@ -77,16 +82,26 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
         mat4.translate(this.head.transform(), [0, headSize[1]/2 + neckSize[1]/2, 0]);
         this.neck.add(this.head);
         
+        this.eye = new SceneNode("eye");
+        mat4.translate(this.eye.transform(), [0, eyeSize[1]/4, headSize[2]/2]);
+        this.head.add(this.eye);
+        
+        this.beard = new SceneNode("beard");
+        mat4.translate(this.beard.transform(), [0, -beardSize[1]/2 * 1.7, headSize[2]/2]);
+        this.head.add(this.beard);
+        
+        // feet
         this.footLeft = new SceneNode("footLeft");
-        mat4.translate(this.footLeft.transform(), [ torsoSize[0]/2 - footSize[0]/2, -torsoSize[1]/2 - footSize[1]/2 , 0] );
+        mat4.translate(this.footLeft.transform(), [ torsoSize[2]/2 - footSize[0]/2, -torsoSize[1]/2 - footSize[1]/2 , 0] );
         this.torso.add(this.footLeft);
         
         this.footRight = new SceneNode("footRight");
-        mat4.translate(this.footRight.transform(), [ footSize[0]/2 - torsoSize[0]/2, -torsoSize[1]/2 - footSize[1]/2 , 0] );
+        mat4.translate(this.footRight.transform(), [ footSize[0]/2 - torsoSize[2]/2, -torsoSize[1]/2 - footSize[1]/2 , 0] );
         this.torso.add(this.footRight);
         
+        // left arm, cylinder
         this.shoulderLeft = new SceneNode("shoulderLeft");
-        mat4.translate(this.shoulderLeft.transform(), [ torsoSize[0]/2 + jointSize[0]/2, torsoSize[1]/2 - jointSize[1]/2, 0] );
+        mat4.translate(this.shoulderLeft.transform(), [ torsoSize[2]/2 + jointSize[0]/2, torsoSize[1]/2 - jointSize[1]/2, 0] );
         mat4.rotateZ(this.shoulderLeft.transform(), Math.PI / 4 + 0.05);
         this.torso.add(this.shoulderLeft);  
         
@@ -112,8 +127,13 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
         mat4.translate(this.cylinder.transform(), [cylinderSize[0]/2 + jointSize[0]/2, -cylinderSize[1]/2, 0]);
         this.wristLeft.add(this.cylinder);
         
+        this.cylinderRim = new SceneNode("cylinder rim");
+        mat4.translate(this.cylinderRim.transform(), [0, cylinderSize[1]/2 - cylinderRimSize[1]/2, 0]);
+        this.cylinder.add(this.cylinderRim);
+        
+        // right arm, flower
         this.shoulderRight = new SceneNode("shoulderRight");
-        mat4.translate(this.shoulderRight.transform(), [ -torsoSize[0]/2 - jointSize[0]/2, torsoSize[1]/2 - jointSize[1]/2, 0] );
+        mat4.translate(this.shoulderRight.transform(), [ -torsoSize[2]/2 - jointSize[0]/2, torsoSize[1]/2 - jointSize[1]/2, 0] );
         mat4.rotateZ(this.shoulderRight.transform(), Math.PI / 3);
         this.torso.add(this.shoulderRight);
         
@@ -142,6 +162,7 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
         
         // Skin
         var torsoSkin = new SceneNode("torso skin");
+        mat4.rotateY(torsoSkin.transform(), Math.PI/2);
         mat4.scale(torsoSkin.transform(), torsoSize);
         torsoSkin.add(cube, programs.vertexColor);
         
@@ -155,9 +176,16 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
         mat4.scale(headSkin.transform(), headSize);
         headSkin.add(solidEllipsoid, programs.red);
         
-        var cylinderSkin = new SceneNode("cylinder skin");
-        mat4.scale(cylinderSkin.transform(), cylinderSize);
-        cylinderSkin.add(solidBand, programs.uni);
+        var eyeSkin = new SceneNode("eye skin");
+        mat4.rotateY(eyeSkin.transform(), 0.4);
+        mat4.scale(eyeSkin.transform(), eyeSize);
+        eyeSkin.add(solidEllipsoid, programs.red);
+        eyeSkin.add(wireframeEllipsoid, programs.uni);
+        
+        var beardSkin = new SceneNode("beard skin");
+        mat4.rotateZ(beardSkin.transform(), Math.PI);
+        mat4.scale(beardSkin.transform(), beardSize);
+        beardSkin.add(triangle, programs.vertexColor);
         
         var footSkin = new SceneNode("foot skin");
         mat4.scale(footSkin.transform(), footSize);
@@ -176,7 +204,15 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
         armSkin.add(solidEllipsoid, programs.red);
         armSkin.add(wireframeEllipsoid, programs.uni);
         
-        var flowerSkin = new SceneNode("flowerSkin");
+        var cylinderSkin = new SceneNode("cylinder skin");
+        mat4.scale(cylinderSkin.transform(), cylinderSize);
+        cylinderSkin.add(solidBand, programs.uni);
+        
+        var cylinderRimSkin = new SceneNode("cylinder rim skin");
+        mat4.scale(cylinderRimSkin.transform(), cylinderRimSize);
+        cylinderRimSkin.add(solidBand, programs.uni);
+        
+        var flowerSkin = new SceneNode("flower skin");
         mat4.scale(flowerSkin.transform(), flowerSize);
         mat4.rotateX(flowerSkin.transform(), -Math.PI/2);
         flowerSkin.add(surfaceDinis, programs.red);
@@ -187,6 +223,8 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
         this.torso.add(torsoSkin);
         this.neck.add(neckSkin);
         this.head.add(headSkin);
+        this.eye.add(eyeSkin);
+        this.beard.add(beardSkin);
         this.footLeft.add(footSkin);
         this.footRight.add(footSkin);
         this.shoulderLeft.add(jointSkin);
@@ -195,6 +233,7 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
         this.foreArmLeft.add(armSkin);
         this.wristLeft.add(jointSkin);
         this.cylinder.add(cylinderSkin);
+        this.cylinderRim.add(cylinderRimSkin);
         this.shoulderRight.add(jointSkin);
         this.armRight.add(armSkin);
         this.elbowRight.add(jointSkin);
@@ -216,6 +255,9 @@ define(["scene_node", "gl-matrix", "models/band", "models/triangle", "models/cub
                 break; 
             case "cylinder":
                 mat4.rotate(this.shoulderLeft.transformation, angle, [0, 0, 1]);
+                break;
+            case "eye":
+                mat4.rotate(this.eye.transformation, angle, [0, 1, 0]);
                 break;
             default:
                 window.console.log("axis " + rotationAxis + " not implemented.");

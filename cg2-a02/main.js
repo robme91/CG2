@@ -64,6 +64,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
             }
             
             scene.rotate("cylinder", deltaT / 1000 * 50 * direction);
+            scene.rotate("eye", deltaT / 1000 * 30 * direction);
             
             // (re-) draw the scene
             scene.draw();
