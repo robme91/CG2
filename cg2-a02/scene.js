@@ -121,7 +121,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // automatically generates a corresponding checkbox in the UI.
         this.drawOptions = { "Perspective Projection": true, 
                              "Show Triangle": false,
-                             "Show Cube": false,
+                             "Show Cube": true,
                              "Show Band": false,
                              "Show WireframeBand" : false,
                              "Show Ellipsoid": false,
@@ -131,7 +131,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show WireframeDinis" : false,
                              "Show Umbrella" : false,
                              "Show WireframeUmbrella" : false,
-                             "Show Robot": true
+                             "Show Robot": false
                              };
     };
 
