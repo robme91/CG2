@@ -44,6 +44,9 @@ struct LightSource {
 } ;
 uniform LightSource light;
 
+//uniform for debugging
+uniform bool isDebugOn;
+
 /*
 
  Calculate surface color based on Phong illumination model.
@@ -71,6 +74,10 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     if(ndotl<=0.0) 
         return ambient; // shadow / facing away from the light source
     
+    if(isDebugOn){
+        if(ndotl <= 0.052)
+            return vec3(0, 1, 0);
+    }
     // diffuse contribution
     vec3 diffuse = material.diffuse * light.color * ndotl;
     

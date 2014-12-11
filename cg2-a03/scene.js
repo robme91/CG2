@@ -118,7 +118,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         // automatically generates a corresponding checkbox in the UI.
         this.drawOptions = { 
                              "Show Surface": true,
-                             "Show Grid"   : false  
+                             "Show Grid"   : false,
+                             "Show Debug"  : false
                              };                       
     };
 
@@ -153,6 +154,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.surfaceNode.setVisible( this.drawOptions["Show Surface"] ); 
         this.wireframeNode.setVisible( this.drawOptions["Show Grid"] ); 
         
+        this.materials.planet.setUniform( "isDebugOn", "bool", this.drawOptions["Show Debug"] );
+
 
         // draw the scene 
         this.universeNode.draw(gl, null, modelViewMatrix);
