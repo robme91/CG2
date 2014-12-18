@@ -58,8 +58,14 @@ uniform bool isDebugOn;
  */
 vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) {
     
+    float darkness = 1.0; 
+    if(isDebugOn){
+        if(mod(texCoords.s, 0.05) > 0.025)
+            darkness = 0.5;
+    }
+    
     // ambient part
-    vec3 ambient = material.ambient * ambientLight;
+    vec3 ambient = material.ambient * ambientLight * darkness;
     
     // back face towards viewer (looking at the earth from the inside)?
     float ndotv = dot(n,v);
@@ -79,7 +85,7 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
             return vec3(0, 1, 0);
     }
     // diffuse contribution
-    vec3 diffuse = material.diffuse * light.color * ndotl;
+    vec3 diffuse = material.diffuse * light.color * ndotl * darkness;
     
      // reflected light direction = perfect reflection direction
     vec3 r = reflect(l,n);

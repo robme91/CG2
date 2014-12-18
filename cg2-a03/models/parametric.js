@@ -37,10 +37,14 @@ define(["vbo"],
         var uStep = (config.uMax - config.uMin) / uSegments;
         var vStep = (config.vMax - config.vMin) / vSegments;
         
+        var uMax = config.uMin + uStep * uSegments;
+        var vMax = config.vMin + vStep * vSegments;
+        
         var coordinates = [];
         var normals = [];
         var solidIndices = [];
         var wireframeIndices = [];
+        var textCoords = [];
         
         for (var uMul = 0; uMul <= uSegments; uMul++) {
             for (var vMul = 0; vMul <= vSegments; vMul++) {
@@ -53,6 +57,9 @@ define(["vbo"],
                 
                 var normal = normalFunc(u, v);
                 normals.push(normal[0], normal[1], normal[2]);
+                
+                //create textCoords
+                textCoords.push( v / vMax, u / uMax);
                 
                 // create indices
                 if ( uMul > 0 && vMul > 0) {
@@ -76,6 +83,10 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": coordinates 
                                                   } );
+        this.textCoordBuffer = new vbo.Attribute(gl, {  "numComponents": 2,
+                                                        "dataType": gl.FLOAT,
+                                                        "data": textCoords 
+                                                    } );
                                                   
        // create vertex buffer object (VBO) for the normal vectors
         this.normalBuffer = new vbo.Attribute(gl, { "numComponents": 3,
@@ -96,6 +107,7 @@ define(["vbo"],
         var program = material.getProgram();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         this.normalBuffer.bind(gl, program, "vertexNormal");
+        this.textCoordBuffer.bind(gl, program,  "vertexTexCoords");
  
         // draw the vertices as points
         if(this.drawStyle == "points") {
