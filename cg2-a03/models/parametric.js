@@ -61,6 +61,7 @@ define(["vbo"],
                 //create textCoords
                 textCoords.push( v / vMax, u / uMax);
                 
+                
                 // create indices
                 if ( uMul > 0 && vMul > 0) {
                     var indexA = coordinates.length / 3 - 1;
@@ -82,7 +83,8 @@ define(["vbo"],
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
                                                     "data": coordinates 
-                                                  } );
+                                                  } ); 
+         
         this.textCoordBuffer = new vbo.Attribute(gl, {  "numComponents": 2,
                                                         "dataType": gl.FLOAT,
                                                         "data": textCoords 

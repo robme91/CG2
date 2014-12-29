@@ -20,24 +20,29 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
 
         // store the WebGL rendering context 
         this.gl = gl;  
-
+        
         // set of GPU programs to be used
         this.programs = {};
         this.programs.unicolor = new Program(gl, shaders.getVertexShader("unicolor"), 
                                              shaders.getFragmentShader("unicolor") );
         this.programs.planet = new Program(gl, shaders.getVertexShader("planet"), 
                                               shaders.getFragmentShader("planet") );
+                
+
+        
 
         // set of materials to be used
         this.materials = {};
         this.materials.blue   = new Material("blue", this.programs.unicolor);
         this.materials.grid   = new Material("grid", this.programs.unicolor);
         this.materials.planet = new Material("planet", this.programs.planet);
+        
+
 
         // set uniforms required by the respective shaders
         this.materials.blue.setUniform( "uniColor", "vec4", [0.1, 0.1, 0.8, 1] );
         this.materials.grid.setUniform( "uniColor", "vec4", [0.7, 0.7, 0.7, 1] );
-        this.materials.planet.setUniform( "material.ambient",   "vec3", [0.6,0.2,0.2] ); 
+        this.materials.planet.setUniform( "material.ambient",   "vec3", [0.0,0.0,0.0] ); 
         this.materials.planet.setUniform( "material.diffuse",   "vec3", [0.8,0.2,0.2] ); 
         this.materials.planet.setUniform( "material.specular",  "vec3", [0.4,0.4,0.4] ); 
         this.materials.planet.setUniform( "material.shininess", "float", 80 ); 
@@ -49,7 +54,17 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.materials.planet.setUniform( "light.direction", "vec3", [-1,0,0] );
         this.materials.planet.setUniform( "light.color", "vec3", [1,1,1] );
 
-        // TODO load and create required textures
+        // load and create required textures
+        var daylightTex = new texture.Texture2D(gl, "textures/earth_month04.jpg");
+        var nightlightTex = new texture.Texture2D(gl, "textures/earth_at_night_2048.jpg");
+        
+        var _scene = this;
+        texture.onAllTexturesLoaded(function (){
+            _scene.programs.planet.use();
+            _scene.programs.planet.setTexture("daylightTexture", 0, daylightTex);
+            _scene.programs.planet.setTexture("nightlightTexture", 1, nightlightTex);
+            _scene.draw();
+        });
 
         // initial position of the camera
         this.cameraTransformation = mat4.lookAt([0,0,3], [0,0,0], [0,1,0]);
@@ -119,7 +134,9 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.drawOptions = { 
                              "Show Surface": true,
                              "Show Grid"   : false,
-                             "Show Debug"  : false
+                             "Show Debug"  : false,
+                             "Show Daytime Texture" : true,
+                             "Show Night Texture" : false
                              };                       
     };
 
@@ -155,6 +172,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.wireframeNode.setVisible( this.drawOptions["Show Grid"] ); 
         
         this.materials.planet.setUniform( "isDebugOn", "bool", this.drawOptions["Show Debug"] );
+        this.materials.planet.setUniform("isDayOn", "bool", this.drawOptions["Show Daytime Texture"]);
+        this.materials.planet.setUniform("isNightOn", "bool", this.drawOptions["Show Night Texture"]);
 
 
         // draw the scene 
