@@ -72,30 +72,29 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
         if(mod(texCoords.s, 0.05) > 0.025)
             darkness = 0.5;
     }
-    
-    //texture colors
-    vec3 daylightColor = texture2D(daylightTexture, texCoords).rgb * 1.5;
-    vec3 nightlightColor = texture2D(nightlightTexture, texCoords).rgb;
-    
-    //check if texture or standart phong part shall be taken
-    vec3 ambientCalculator = material.ambient;
-    if(isNightOn){
-        ambientCalculator = nightlightColor;
-    }
-    
-    // ambient part
-    vec3 ambient = ambientCalculator * ambientLight * darkness;
-    
+
     // back face towards viewer (looking at the earth from the inside)?
     float ndotv = dot(n,v);
     if(ndotv<0.0)
         return vec3(0,0,0);
-    
+
     // vector from light to current point
     vec3 l = normalize(light.direction);
     
     // cos of angle between light and surface. 
     float ndotl = dot(n,-l);
+
+    // ambient part
+    vec3 ambient;
+    // check if texture or standart phong part shall be taken
+    if(isNightOn && ndotl < 0.0) {
+        //get texture colour
+        vec3 nightlightColor = texture2D(nightlightTexture, texCoords).rgb;
+        ambient = nightlightColor * ambientLight * darkness;
+    } else {
+        ambient = material.ambient * ambientLight * darkness;
+    }
+
     if(ndotl<=0.0) 
         return ambient; // shadow / facing away from the light source
     
@@ -103,15 +102,18 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
         if(ndotl <= 0.052)
             return vec3(0, 1, 0);
     }
-    
-    // check if texture or standart phong shall be taken 
-    vec3 diffuseCalculator = material.diffuse;
+
+    // diffuse contribution
+    vec3 diffuse;
+    // check if texture or standard phong should be taken
     if(isDayOn){
-       diffuseCalculator = daylightColor;
+        //get texture colour
+        vec3 daylightColor = texture2D(daylightTexture, texCoords).rgb * 1.5;
+        diffuse = daylightColor * light.color * ndotl * darkness;
+    } else {
+        diffuse = material.diffuse * light.color * ndotl * darkness;
     }
     
-    // diffuse contribution
-    vec3 diffuse = diffuseCalculator * light.color * ndotl * darkness;
     
      // reflected light direction = perfect reflection direction
     vec3 r = reflect(l,n);
