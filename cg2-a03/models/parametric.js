@@ -59,7 +59,7 @@ define(["vbo"],
                 normals.push(normal[0], normal[1], normal[2]);
                 
                 //create textCoords
-                textCoords.push( v / vMax, u / uMax);
+                textCoords.push( v / vMax, 1 - u / uMax);
                 
                 
                 // create indices
