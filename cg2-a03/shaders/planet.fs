@@ -52,8 +52,10 @@ uniform bool isDebugOn;
 //uniforms for textures
 uniform sampler2D daylightTexture;
 uniform sampler2D nightlightTexture;
+uniform sampler2D cloudTexture;
 uniform bool isDayOn;
 uniform bool isNightOn;
+uniform bool isCloudOn;
 
 /*
 
@@ -83,6 +85,14 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     
     // cos of angle between light and surface. 
     float ndotl = dot(n,-l);
+    
+    // the following calculation makes a smooth transition between the day 
+    // and night texture possible (it is also used in the cloud transition calculation)
+    // multiplier interpolates from 1.0 to 0.0 where ndotl is in range [0.0, 0.5]
+    // ndotl < 0.0 results in multiplier being 1.0
+    // ndotl > 0.5 results in multiplier being 0.0
+    float clampedNdotL = clamp(ndotl, 0.0, 0.5);
+    float multiplier = (0.0 - clampedNdotL + 0.5) * 2.0;
 
     // ambient part
     vec3 ambient;
@@ -90,18 +100,16 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     if(isNightOn) {
         //get texture colour
         vec3 nightlightColor = texture2D(nightlightTexture, texCoords).rgb;
-        
-        // the following calculation makes sure there is a smooth transition between 
-        // the day and night texture
-        // multiplier interpolates from 1.0 to 0.0 where ndotl is in range [0.0, 0.5]
-        // ndotl < 0.0 results in multiplier being 1.0
-        // ndotl > 0.5 results in multiplier being 0.0
-        float clampedNdotL = clamp(ndotl, 0.0, 0.5);
-        float multiplier = (0.0 - clampedNdotL + 0.5) * 2.0;
-        
         ambient = multiplier * nightlightColor * ambientLight * darkness;
     } else {
         ambient = material.ambient * ambientLight * darkness;
+    }
+    
+    if(isCloudOn) {
+        // apply the cloud texture to the ambient part (night side)
+        vec3 cloudColor = texture2D(cloudTexture, texCoords).rgb;
+        // the multiplier is taken into account to get a smooth transition
+        ambient = mix(ambient, cloudColor * ambientLight * darkness * multiplier, cloudColor.r);
     }
 
     if(ndotl<=0.0) 
@@ -133,9 +141,14 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     // specular contribution
     vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
     
+    if(isCloudOn) {
+        // apply the cloud texture to the diffuse part (day side)
+        vec3 cloudColor = texture2D(cloudTexture, texCoords).rgb;
+        diffuse = mix(diffuse, cloudColor * ndotl * 1.5, cloudColor.r);
+    }
+    
     // return sum of all contributions
     return ambient + diffuse + specular;
-    
 }
 
 void main() {
