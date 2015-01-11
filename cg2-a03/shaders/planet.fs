@@ -87,11 +87,20 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     // ambient part
     vec3 ambient;
     // check if texture or standart phong part shall be taken
-    if(isNightOn && ndotl < 0.0) {
+    if(isNightOn) {
         //get texture colour
         vec3 nightlightColor = texture2D(nightlightTexture, texCoords).rgb;
-        ambient = nightlightColor * ambientLight * darkness;
-    }else {
+        
+        // the following calculation makes sure there is a smooth transition between 
+        // the day and night texture
+        // multiplier interpolates from 1.0 to 0.0 where ndotl is in range [0.0, 0.5]
+        // ndotl < 0.0 results in multiplier being 1.0
+        // ndotl > 0.5 results in multiplier being 0.0
+        float clampedNdotL = clamp(ndotl, 0.0, 0.5);
+        float multiplier = (0.0 - clampedNdotL + 0.5) * 2.0;
+        
+        ambient = multiplier * nightlightColor * ambientLight * darkness;
+    } else {
         ambient = material.ambient * ambientLight * darkness;
     }
 
@@ -123,13 +132,6 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     
     // specular contribution
     vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
-
-    //Day Night Transission
-    if(isDayOn && isNightOn && ndotl >= 0.0 && ndotl < 0.3){
-        vec3 daylightColor = texture2D(daylightTexture, texCoords).rgb;
-        vec3 nightlightColor = texture2D(nightlightTexture, texCoords).rgb;
-        return daylightColor * light.color * ndotl * darkness * 1.5  + nightlightColor * ambientLight * darkness * 0.5 + specular;
-    }
     
     // return sum of all contributions
     return ambient + diffuse + specular;
