@@ -91,7 +91,7 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
         //get texture colour
         vec3 nightlightColor = texture2D(nightlightTexture, texCoords).rgb;
         ambient = nightlightColor * ambientLight * darkness;
-    } else {
+    }else {
         ambient = material.ambient * ambientLight * darkness;
     }
 
@@ -113,7 +113,7 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     } else {
         diffuse = material.diffuse * light.color * ndotl * darkness;
     }
-    
+     
     
      // reflected light direction = perfect reflection direction
     vec3 r = reflect(l,n);
@@ -124,6 +124,13 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     // specular contribution
     vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
 
+    //Day Night Transission
+    if(isDayOn && isNightOn && ndotl >= 0.0 && ndotl < 0.3){
+        vec3 daylightColor = texture2D(daylightTexture, texCoords).rgb;
+        vec3 nightlightColor = texture2D(nightlightTexture, texCoords).rgb;
+        return daylightColor * light.color * ndotl * darkness * 1.5  + nightlightColor * ambientLight * darkness * 0.5 + specular;
+    }
+    
     // return sum of all contributions
     return ambient + diffuse + specular;
     

@@ -136,7 +136,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                              "Show Grid"   : false,
                              "Show Debug"  : false,
                              "Show Daytime Texture" : true,
-                             "Show Night Texture" : false
+                             "Show Night Texture" : true
                              };                       
     };
 
