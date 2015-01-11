@@ -53,9 +53,11 @@ uniform bool isDebugOn;
 uniform sampler2D daylightTexture;
 uniform sampler2D nightlightTexture;
 uniform sampler2D cloudTexture;
+uniform sampler2D waterTexture;
 uniform bool isDayOn;
 uniform bool isNightOn;
 uniform bool isCloudOn;
+uniform bool isRedGreenOn;
 
 /*
 
@@ -67,6 +69,16 @@ uniform bool isCloudOn;
  
  */
 vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) {
+    
+    // Show land in green and water in red
+    if(isRedGreenOn) {
+        float waterheight = texture2D(waterTexture, texCoords).r;
+        if (waterheight < 0.2) {
+            return vec3(0.0, 1.0, 0.0);
+        } else {
+            return vec3(1.0, 0.0, 0.0);
+        }
+    }
     
     // debug mode with stripes of dark and bright
     float darkness = 1.0; 

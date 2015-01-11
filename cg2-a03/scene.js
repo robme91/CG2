@@ -58,6 +58,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         var daylightTex = new texture.Texture2D(gl, "textures/earth_month04.jpg");
         var nightlightTex = new texture.Texture2D(gl, "textures/earth_at_night_2048.jpg");
         var cloudTexture = new texture.Texture2D(gl, "textures/earth_clouds_2048.jpg");
+        var waterTexture = new texture.Texture2D(gl, "textures/earth_bathymetry_2048.jpg");
         
         var _scene = this;
         texture.onAllTexturesLoaded(function (){
@@ -65,6 +66,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
             _scene.programs.planet.setTexture("daylightTexture", 0, daylightTex);
             _scene.programs.planet.setTexture("nightlightTexture", 1, nightlightTex);
             _scene.programs.planet.setTexture("cloudTexture", 2, cloudTexture);
+            _scene.programs.planet.setTexture("waterTexture", 3, waterTexture);
             _scene.draw();
         });
 
@@ -139,7 +141,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                              "Show Debug"  : false,
                              "Show Daytime Texture" : true,
                              "Show Night Texture" : true,
-                             "Show Cloud Texture": true
+                             "Show Cloud Texture": false,
+                             "Show Red-Green": true
                              };                       
     };
 
@@ -174,10 +177,11 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.surfaceNode.setVisible( this.drawOptions["Show Surface"] ); 
         this.wireframeNode.setVisible( this.drawOptions["Show Grid"] ); 
         
-        this.materials.planet.setUniform("isDebugOn", "bool", this.drawOptions["Show Debug"] );
+        this.materials.planet.setUniform("isDebugOn", "bool", this.drawOptions["Show Debug"]);
         this.materials.planet.setUniform("isDayOn", "bool", this.drawOptions["Show Daytime Texture"]);
         this.materials.planet.setUniform("isNightOn", "bool", this.drawOptions["Show Night Texture"]);
         this.materials.planet.setUniform("isCloudOn", "bool", this.drawOptions["Show Cloud Texture"]);
+        this.materials.planet.setUniform("isRedGreenOn", "bool", this.drawOptions["Show Red-Green"]);
 
 
         // draw the scene 
