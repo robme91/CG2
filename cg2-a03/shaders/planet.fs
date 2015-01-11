@@ -58,6 +58,7 @@ uniform bool isDayOn;
 uniform bool isNightOn;
 uniform bool isCloudOn;
 uniform bool isRedGreenOn;
+uniform bool isGlossMapOn;
 
 /*
 
@@ -74,9 +75,9 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     if(isRedGreenOn) {
         float waterheight = texture2D(waterTexture, texCoords).r;
         if (waterheight < 0.2) {
-            return vec3(0.0, 1.0, 0.0);
+            return vec3(0.0, 1.0, 0.0); // green (land)
         } else {
-            return vec3(1.0, 0.0, 0.0);
+            return vec3(1.0, 0.0, 0.0); // red (water)
         }
     }
     
@@ -143,6 +144,11 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
         diffuse = material.diffuse * light.color * ndotl * darkness;
     }
      
+    if(isCloudOn) {
+        // apply the cloud texture to the diffuse part (day side)
+        vec3 cloudColor = texture2D(cloudTexture, texCoords).rgb;
+        diffuse = mix(diffuse, cloudColor * ndotl * 1.5, cloudColor.r);
+    }
     
      // reflected light direction = perfect reflection direction
     vec3 r = reflect(l,n);
@@ -150,14 +156,19 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     // angle between reflection dir and viewing dir
     float rdotv = max( dot(r,v), 0.0);
     
-    // specular contribution
-    vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
     
-    if(isCloudOn) {
-        // apply the cloud texture to the diffuse part (day side)
-        vec3 cloudColor = texture2D(cloudTexture, texCoords).rgb;
-        diffuse = mix(diffuse, cloudColor * ndotl * 1.5, cloudColor.r);
+    // specular contribution
+    // make the specular highlights depend on the ground (land/water)
+    float specularModifier = 1.0;
+    if(isGlossMapOn) {
+        float waterheight = texture2D(waterTexture, texCoords).r;
+        if (waterheight < 0.2) {
+             // land
+            specularModifier = 0.3;
+        }
     }
+    
+    vec3 specular = specularModifier * material.specular * light.color * pow(rdotv, material.shininess);
     
     // return sum of all contributions
     return ambient + diffuse + specular;

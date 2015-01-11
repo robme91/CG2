@@ -142,7 +142,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                              "Show Daytime Texture" : true,
                              "Show Night Texture" : true,
                              "Show Cloud Texture": false,
-                             "Show Red-Green": true
+                             "Show Red-Green": false,
+                             "Show Gloss Map": true
                              };                       
     };
 
@@ -182,6 +183,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.materials.planet.setUniform("isNightOn", "bool", this.drawOptions["Show Night Texture"]);
         this.materials.planet.setUniform("isCloudOn", "bool", this.drawOptions["Show Cloud Texture"]);
         this.materials.planet.setUniform("isRedGreenOn", "bool", this.drawOptions["Show Red-Green"]);
+        this.materials.planet.setUniform("isGlossMapOn", "bool", this.drawOptions["Show Gloss Map"]);
 
 
         // draw the scene 
